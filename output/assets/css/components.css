@@ -1,0 +1,910 @@
+/* ==========================================================================
+   Sankara Hill — Global Components
+   All classes here are reusable across more than one page.
+   ========================================================================== */
+
+/* --- c-btn ---------------------------------------------------------------
+   Shared button anatomy: centered flex, sharp corners (--radius-none), no
+   shadow, no border — every CTA uses the navbar's teal-800 fill and uppercase
+   body type. Hover darkens consistently across variants.
+   -------------------------------------------------------------------- */
+
+.c-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* touch target floor, design-to-html.md §3 */
+  border-radius: var(--radius-none);
+  background-color: var(--color-action);
+  color: var(--color-text-inverse);
+  font-family: var(--font-body);
+  font-style: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color var(--transition-base);
+}
+
+.c-btn--navbar {
+  height: var(--size-btn-navbar-h);
+  padding-inline: var(--space-7);
+  font-size: var(--text-md-size);
+  letter-spacing: var(--text-md-ls);
+}
+
+.c-btn:hover,
+.c-btn:focus-visible {
+  /* assumption: standard hover state, not shown in design */
+  background-color: var(--color-action-strong);
+}
+
+/* --- c-navbar --------------------------------------------------------- */
+
+.c-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-block: var(--space-6);   /* 24 -> 18 */
+  padding-inline: var(--nav-gutter); /* 80 -> 60 */
+  background-color: var(--color-surface);
+  border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+.c-navbar__logo {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.09375rem, 0.1042vw, 0.125rem); /* 1.5 -> 2px */
+  min-width: 0;
+}
+
+.c-navbar__brand {
+  font-family: var(--font-title);
+  font-size: var(--size-brand);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.005em; /* Figma 0.5% — relative, never scaled */
+  color: var(--color-text);
+}
+
+.c-navbar__tagline {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-xs-size); /* floor-applied, see tokens.css */
+  letter-spacing: var(--text-xs-ls);
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+/* Figma marks nav-links as absolutely-centered regardless of the width
+   difference between the logo (219px) and actions (276px) clusters —
+   true visual centering, not a flex space-between illusion. */
+.c-navbar__links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8); /* 32 -> 24 */
+}
+
+.c-navbar__link {
+  position: relative;
+  font-size: var(--text-sm-size); /* floor-applied */
+  font-weight: 300; /* Figma: fontStyle "Light" on this node */
+  line-height: var(--leading-body);
+  color: var(--color-text);
+}
+
+.c-navbar__link:hover,
+.c-navbar__link[aria-current="page"] {
+  color: var(--color-action);
+}
+
+.c-navbar__link[aria-current="page"]::after {
+  /* assumption: active-state underline, not present as a variant in the
+     scanned frame — standard convention for the current nav item */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(-0.1875rem, -0.2083vw, -0.25rem);
+  height: var(--border-hairline);
+  background-color: currentColor;
+}
+
+/* Wrapper exists only so the links + actions can collapse into one mobile
+   panel; on desktop it dissolves so its children lay out against .c-navbar
+   directly (absolutely-centered links, right-aligned actions). */
+.c-navbar__panel {
+  display: contents;
+}
+
+.c-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6); /* 24 -> 18 */
+}
+
+.c-navbar__lang {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2); /* 8 -> 6 */
+  font-size: var(--text-sm-size);
+  font-weight: 300;
+}
+
+.c-navbar__lang-option {
+  color: var(--color-text-subtle);
+}
+
+.c-navbar__lang-option[aria-current="true"] {
+  color: var(--color-text);
+}
+
+.c-navbar__lang-divider {
+  width: var(--border-hairline);
+  height: 1.3em; /* relative to text row — scales with font-size naturally */
+  background-color: var(--color-border);
+  border: 0;
+}
+
+.c-navbar__toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.c-navbar__toggle-icon,
+.c-navbar__toggle-icon::before,
+.c-navbar__toggle-icon::after {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-text);
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.c-navbar__toggle-icon {
+  position: relative;
+}
+
+.c-navbar__toggle-icon::before,
+.c-navbar__toggle-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.c-navbar__toggle-icon::before {
+  top: -6px;
+}
+
+.c-navbar__toggle-icon::after {
+  top: 6px;
+}
+
+.c-navbar[data-nav-open="true"] .c-navbar__toggle-icon {
+  background-color: transparent;
+}
+
+.c-navbar[data-nav-open="true"] .c-navbar__toggle-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.c-navbar[data-nav-open="true"] .c-navbar__toggle-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* --- Responsive: below `md`, design has no source frame — assumption:
+   collapse links + actions into a slide-down panel behind a toggle. -- */
+@media (max-width: 768px) {
+  .c-navbar {
+    padding-inline: var(--space-6);
+  }
+
+  .c-navbar__toggle {
+    display: inline-flex;
+  }
+
+  .c-navbar__links,
+  .c-navbar__actions {
+    position: static;
+    transform: none;
+  }
+
+  .c-navbar__panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border-bottom: var(--border-hairline) solid var(--color-border);
+    display: none;
+  }
+
+  .c-navbar__links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .c-navbar[data-nav-open="true"] .c-navbar__panel {
+    display: flex;
+  }
+}
+
+/* --- c-star-rating ------------------------------------------------------- */
+
+.c-star-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1); /* 4 -> 3 */
+}
+
+.c-star-rating__icon {
+  width: var(--size-star);
+  height: var(--size-star);
+  fill: var(--color-star-rating);
+}
+
+/* --- c-fact-strip ---------------------------------------------------------
+   Three-up stat row (components-inventory.md: FactItem). Figma: three fixed
+   240px items distributed SPACE_BETWEEN across 786px, so each item's top
+   border is a SEPARATE rule with a gap between them — not one continuous
+   line. Items keep their own width (not 1fr) so those gaps survive.
+   -------------------------------------------------------------------- */
+
+.c-fact-strip {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--layout-facts-max);
+}
+
+.c-fact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 var(--size-fact-item);
+  gap: var(--space-3); /* 12 -> 9 */
+  padding-top: var(--space-5); /* 20 -> 15 */
+  border-top: var(--border-hairline) solid var(--color-border);
+  text-align: center;
+}
+
+.c-fact-item__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+}
+
+.c-fact-item__value {
+  font-family: var(--font-title);
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  letter-spacing: var(--text-h3-ls);
+  color: var(--color-text);
+}
+
+/* --- c-section-header -----------------------------------------------------
+   Eyebrow -> headline -> subtext (components-inventory.md: SectionHeader).
+   Two arrangements: --split puts the subtext in a right-hand column
+   (Figma: 1600px row, 649px text column, 30px gutter, MIN/MAX); --stacked
+   runs the same three tiers full width. --------------------------------- */
+
+.c-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* 24 */
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+.c-section-header--split {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-7-5); /* 30 */
+}
+
+.c-section-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.c-section-header__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  line-height: var(--text-sm-lh);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.c-section-header__title {
+  font-family: var(--font-title);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  letter-spacing: var(--text-h2-ls);
+  color: var(--color-text);
+}
+
+.c-section-header__lede {
+  max-width: clamp(24rem, 26.6667vw, 32rem); /* 384 -> 512px */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+/* --- c-facility-pill ------------------------------------------------------
+   Icon chip + label pill (components-inventory.md: FacilityPill). The
+   accommodations variant is a bordered outline pill with symmetric 20px
+   side padding; the facilities-section variant (not yet sliced) uses a
+   filled circular icon-wrapper and asymmetric padding. ------------------- */
+
+.c-facility-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3); /* 12 */
+  padding: var(--space-2-5) var(--space-5); /* 10 / 20 */
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+}
+
+.c-facility-pill__icon {
+  flex: 0 0 var(--size-icon-sm);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  color: var(--color-text-muted);
+  stroke-width: 1.5;
+}
+
+.c-facility-pill__label {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.c-facility-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3); /* 12 */
+}
+
+/* --- c-room-card ----------------------------------------------------------
+   Two variants (components-inventory.md: RoomCard). --media is image-only
+   with no padding; --detail carries 40px padding and pins its CTA to the
+   bottom via space-between. ------------------------------------------- */
+
+.c-room-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface);
+  overflow: hidden;
+}
+
+.c-room-card--media {
+  flex: 1 1 var(--layout-room-card-lg);
+  min-width: 0;
+}
+
+.c-room-card--detail {
+  flex: 0 1 var(--layout-room-card-sm);
+  min-width: 0;
+  padding: var(--space-10); /* 40 */
+}
+
+.c-room-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.c-room-card__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-room-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* 12 */
+  padding-bottom: var(--space-7); /* 28 */
+  border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+.c-room-card__title {
+  font-family: var(--font-title);
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  letter-spacing: var(--text-h3-ls);
+  color: var(--color-text);
+}
+
+.c-room-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.c-room-card__meta-divider {
+  width: var(--border-hairline);
+  align-self: stretch;
+  background-color: var(--color-border);
+}
+
+.c-room-card__description,
+.c-room-card__facilities-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+.c-room-card__description {
+  font-weight: 300;
+}
+
+.c-room-card__facilities {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* 24 */
+  padding-block: var(--space-7); /* 28 */
+}
+
+.c-room-card__facilities-label {
+  line-height: var(--text-sm-lh);
+  text-transform: uppercase;
+}
+
+
+/* --- c-highlight-block ------------------------------------------------- */
+
+.c-highlight-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* 24 */
+}
+
+.c-highlight-block__thumbnail {
+  width: 100%;
+  height: var(--size-highlight-thumb);
+  border-radius: var(--radius-card);
+  object-fit: cover;
+}
+
+.c-highlight-block__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* 16 */
+}
+
+.c-highlight-block__title {
+  font-family: var(--font-title);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-lh);
+  letter-spacing: var(--text-h4-ls);
+  color: var(--color-text);
+}
+
+.c-highlight-block__description {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+/* --- c-facility-pill--chip --------------------------------------------
+   Facilities-section variant: filled circular icon chip + asymmetric
+   padding (tighter on the icon side), vs. accommodations' plain outline
+   icon and symmetric padding. ------------------------------------------ */
+
+.c-facility-pill--chip {
+  padding: var(--space-2-5) var(--space-6) var(--space-2-5) var(--space-2-5);
+  /* 10 / 24 / 10 / 10 */
+}
+
+.c-facility-pill--chip .c-facility-pill__icon {
+  flex: 0 0 var(--size-icon-chip);
+  width: var(--size-icon-chip);
+  height: var(--size-icon-chip);
+  padding: calc(var(--size-icon-chip) * 0.214); /* ~9px at 42px source */
+  border-radius: var(--radius-full);
+  background-color: var(--color-teal-100);
+  color: var(--color-teal-950);
+}
+
+/* --- c-landmark-list ---------------------------------------------------
+   Distance-to-landmark rows (components-inventory.md: LandmarkItem).
+   Each row is separated by its own bottom rule, not a shared container
+   border — the first row has no top padding, the rest do. ------------- */
+
+.c-landmark-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-landmark-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-7-5); /* 30 */
+  padding-block: var(--space-4); /* 16 */
+  border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+.c-landmark-item:first-child {
+  padding-top: 0;
+}
+
+.c-landmark-item__name {
+  flex: 1 1 auto;
+  font-family: var(--font-body);
+  font-size: var(--text-md-size);
+  line-height: var(--text-md-lh);
+  color: var(--color-text);
+}
+
+.c-landmark-item__duration {
+  flex: 0 0 auto;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* --- c-field ------------------------------------------------------------
+   Form field: label above a 61px control (components-inventory.md:
+   FormField). Native controls are restyled rather than replaced —
+   `appearance: none` on the select, a custom chevron drawn with a
+   background image so it can't be hidden by the UA stylesheet.
+   ------------------------------------------------------------------- */
+
+.c-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* 12 */
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.c-field__label {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+}
+
+.c-field__control {
+  width: 100%;
+  height: clamp(2.859375rem, 3.177vw, 3.8125rem); /* 45.75 -> 61px */
+  padding: var(--space-4); /* 16 */
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  background-color: transparent;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  transition: border-color var(--transition-base);
+}
+
+.c-field__control::placeholder {
+  color: var(--color-text-placeholder);
+  opacity: 1; /* Firefox dims placeholders by default */
+}
+
+.c-field__control:hover {
+  /* assumption: standard hover state, not shown in design */
+  border-color: var(--color-border-subtle);
+}
+
+.c-field__control:focus-visible {
+  border-color: var(--color-action);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-teal-100);
+}
+
+/* :user-invalid only fires after the user interacts with the field (blur
+   or a failed submit) — plain :invalid fires immediately on load for a
+   required date input, showing an error before the visitor's typed
+   anything. Falls back silently to no error styling in Safari (no
+   :user-invalid support yet); the browser's own validation still blocks
+   submission either way. */
+.c-field__control:user-invalid {
+  border-color: var(--color-error-500);
+}
+
+/* Trailing-icon controls (select, date). Chevron/calendar are drawn as a
+   background image so the native UA arrow can be removed entirely. */
+.c-field__control--select,
+.c-field__control--date {
+  appearance: none;
+  padding-right: calc(var(--space-4) + var(--size-icon-sm) + var(--space-3));
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  background-size: var(--size-icon-sm) var(--size-icon-sm);
+}
+
+.c-field__control--select {
+  /* lucide chevron-down, stroke #020617 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23020617' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.c-field__control--date {
+  /* lucide calendar, stroke #020617 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23020617' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 2v4M16 2v4M3 10h18'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3C/svg%3E");
+}
+
+/* Chrome/Safari draw their own picker indicator on top of the background
+   icon — make it invisible but keep it clickable so the picker still
+   opens from where the drawn calendar icon appears. */
+.c-field__control--date::-webkit-calendar-picker-indicator {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  margin-right: calc(var(--space-4) * -1);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.c-field-row {
+  display: flex;
+  gap: var(--space-5); /* 20 */
+  width: 100%;
+}
+
+.c-btn--card {
+  width: 100%;
+  height: var(--size-btn-card-h);
+  padding-inline: var(--space-7);
+  font-size: var(--text-sm-size);
+  font-weight: 500;
+  letter-spacing: 0.015em; /* Figma 1.5% — relative, never scaled */
+}
+
+.c-btn--form {
+  width: 100%;
+  height: var(--size-btn-form-h);
+  padding-inline: var(--space-7);
+  font-size: var(--text-md-size);
+  letter-spacing: var(--text-md-ls);
+}
+
+/* --- c-map ---------------------------------------------------------------
+   Figma renders a static Google Maps mockup; production embeds the live
+   Maps iframe instead, sized to the same aspect so the layout matches.
+   ------------------------------------------------------------------- */
+
+.c-map {
+  width: 100%;
+  aspect-ratio: var(--size-map-aspect);
+  border: 0;
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface-alt);
+}
+
+/* --- c-footer -------------------------------------------------------------
+   Global closing band. Content and labels stay pure white on teal; the
+   divider is the only depth mechanic in the source frame. ---------------- */
+
+.c-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-30) var(--space-40) var(--space-10);
+  background-color: var(--color-teal-800);
+  color: var(--color-text-inverse);
+}
+
+/* footer-content: 3 sibling columns, SPACE_BETWEEN. Source widths (1920):
+   brand 379, contacts 377, explore 241. */
+.c-footer__content {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  width: 100%;
+  max-width: var(--layout-content-max);
+  margin-inline: auto;
+}
+
+.c-footer__brand {
+  display: flex;
+  flex: 0 1 clamp(17.765625rem, 19.7396vw, 23.6875rem);
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.c-footer__identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.c-footer__brand-name {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  line-height: 1.3125;
+  color: var(--color-text-inverse);
+}
+
+.c-footer__tagline,
+.c-footer__contact,
+.c-footer__contact-link,
+.c-footer__link,
+.c-footer__legal {
+  font-family: var(--font-body);
+  color: var(--color-text-inverse);
+}
+
+.c-footer__tagline {
+  font-family: "Inter", var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.c-footer__contact {
+  font-size: var(--text-sm-size);
+  font-weight: 300;
+  line-height: var(--leading-body);
+}
+
+.c-footer__contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-style: normal;
+}
+
+.c-footer__contact-link {
+  display: block;
+  font-size: var(--text-sm-size);
+  font-weight: 300;
+  line-height: var(--leading-body);
+}
+
+.c-footer__contacts,
+.c-footer__explore {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  font-style: normal;
+}
+
+.c-footer__contacts {
+  flex: 0 1 clamp(17.671875rem, 19.6354vw, 23.5625rem);
+}
+
+.c-footer__explore {
+  flex: 0 1 clamp(11.296875rem, 12.5521vw, 15.0625rem);
+}
+
+.c-footer__heading {
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  font-weight: 400;
+  line-height: 1.5556;
+  color: var(--color-text-inverse);
+  text-transform: uppercase;
+}
+
+.c-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* No min-height: the source rows are 29px, so a 44px target would visibly
+   inflate the 12px column gap. Vertical rhythm follows the design instead. */
+.c-footer__link {
+  display: block;
+  font-size: var(--text-sm-size);
+  font-weight: 300;
+  line-height: var(--leading-body);
+}
+
+.c-footer__link:hover,
+.c-footer__link:focus-visible,
+.c-footer__contact-link:hover,
+.c-footer__contact-link:focus-visible,
+.c-footer__social-link:hover,
+.c-footer__social-link:focus-visible {
+  color: var(--color-teal-100);
+}
+
+.c-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--layout-content-max);
+  min-height: 48px;
+  margin-inline: auto;
+  padding-top: var(--space-4);
+  border-top: var(--border-hairline) solid var(--color-teal-700);
+}
+
+.c-footer__legal {
+  font-size: var(--text-sm-size);
+  font-weight: 300;
+  line-height: var(--leading-body);
+}
+
+.c-footer__legal-links {
+  display: flex;
+  gap: var(--space-6);
+}
+
+/* social-links lives inside footer-brand in the source, not footer-bottom. */
+.c-footer__social {
+  display: flex;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-teal-700);
+  color: var(--color-text-inverse);
+}
+
+.c-footer__social-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .c-footer {
+    padding: var(--space-16) var(--space-6) var(--space-6);
+  }
+
+  .c-footer__content,
+  .c-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .c-footer__content {
+    flex-wrap: wrap;
+    gap: var(--space-12);
+  }
+}
+
+/* assumption: footer link destinations (social, policy pages) are not
+   specified in Figma — markup uses placeholder hrefs. */

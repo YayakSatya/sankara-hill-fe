@@ -1,0 +1,166 @@
+/* ==========================================================================
+   Sankara Hill — Design Tokens
+   Source: Figma "Sankara Hill" / landing-page (node 4002:3460), 1920 frame.
+   Values traced from Figma Variables (Typography + Color collections).
+
+   SCALING — FLUID MODE (SCALING.md v3.1 §"Fluid mode"):
+     SOURCE_FRAME = 1920, TARGET_FRAME = 1440, SCALE_RATIO = 0.75
+     FONT_FLOOR_PX = 15
+
+     Every scaled value is expressed as:
+        clamp(FLOOR_or_TARGET_rem, fluid_vw, FIGMA_EXACT_rem)
+     where fluid_vw = figma_px / 19.2  (i.e. figma_px / (1920/100))
+
+     Result: at 1920px the page renders EXACTLY like Figma; at 1440px it
+     renders the 0.75-scaled value; between the two it interpolates
+     linearly; outside the range clamp() locks to the min/max.
+
+   Root font-size stays at 100% (base.css) — never also apply a 75% root,
+   that would apply the ratio twice.
+
+   Exceptions left unscaled per SCALING.md: border-width (hairlines stay
+   1px), box-shadow, pill/full radius, and unitless line-height multipliers.
+   ========================================================================== */
+
+:root {
+  /* --- Color: neutrals -------------------------------------------------- */
+  --color-neutral-0: #ffffff;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-1000: #020617;
+
+  /* --- Color: sankara teal ---------------------------------------------- */
+  --color-teal-50: #f2f7f8;
+  --color-teal-100: #ddecee;
+  --color-teal-700: #1f4b51;
+  --color-teal-800: #15383c;
+  --color-teal-950: #081a1c;
+
+  /* --- Color: semantic (reserved — form states not yet designed) -------- */
+  --color-error-500: #ef4444;
+  --color-warning-500: #f59e0b;
+
+  /* --- Color: decorative (local, not a Figma variable — flagged per
+     SCANING-FIGMA.md; promote if reused beyond the star-rating icon) ----- */
+  --color-star-rating: #f59e0b;
+
+  /* --- Color: roles ----------------------------------------------------- */
+  --color-text: var(--color-neutral-1000);
+  --color-text-muted: var(--color-neutral-600);
+  --color-text-subtle: var(--color-neutral-500);
+  --color-text-placeholder: var(--color-neutral-400);
+  --color-text-inverse: var(--color-neutral-0);
+  --color-surface: var(--color-neutral-0);
+  --color-surface-alt: var(--color-teal-50);
+  --color-surface-dark: var(--color-teal-800);
+  --color-border: var(--color-neutral-200);
+  --color-border-subtle: var(--color-neutral-300);
+  --color-action: var(--color-teal-800);
+  --color-action-strong: var(--color-teal-950);
+
+  /* --- Typography: families --------------------------------------------- */
+  --font-title: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Switzer", "Inter", system-ui, -apple-system, sans-serif;
+
+  /* --- Typography: fluid scale ------------------------------------------
+     min = max(figma_px * 0.75, 15px floor) · mid = figma_px / 19.2 vw
+     max = figma_px (exact Figma value at 1920)
+     -------------------------------------------------------------------- */
+
+  /* h2 — Figma 58 / 68 / -1px */
+  --text-h2-size: clamp(2.71875rem, 3.0208vw, 3.625rem);  /* 43.5 -> 58px */
+  --text-h2-lh: clamp(3.1875rem, 3.5417vw, 4.25rem);      /* 51   -> 68px */
+  --text-h2-ls: clamp(-1px, -0.0521vw, -0.75px);
+
+  /* h3 — Figma 36 / 44 / -0.5px */
+  --text-h3-size: clamp(1.6875rem, 1.875vw, 2.25rem);     /* 27 -> 36px */
+  --text-h3-lh: clamp(2.0625rem, 2.2917vw, 2.75rem);      /* 33 -> 44px */
+  --text-h3-ls: clamp(-0.5px, -0.026vw, -0.375px);
+
+  /* h4 — Figma 28 / 36 / -0.25px */
+  --text-h4-size: clamp(1.3125rem, 1.4583vw, 1.75rem);    /* 21 -> 28px */
+  --text-h4-lh: clamp(1.6875rem, 1.875vw, 2.25rem);       /* 27 -> 36px */
+  --text-h4-ls: clamp(-0.25px, -0.013vw, -0.1875px);
+
+  /* md — Figma 20 / 30 / 0 · scaled 15px sits exactly on the floor */
+  --text-md-size: clamp(0.9375rem, 1.0417vw, 1.25rem);    /* 15 -> 20px */
+  --text-md-lh: clamp(1.40625rem, 1.5625vw, 1.875rem);    /* 22.5 -> 30px */
+  --text-md-ls: 0;
+
+  /* sm — Figma 18 / 28 / 0
+     FLOOR APPLIED: scaled value is 13.5px, below FONT_FLOOR_PX (15px), so
+     the clamp minimum is raised to 15px. Flagged for designer review —
+     at 1440px this reads slightly larger than a literal 0.75 scale. */
+  --text-sm-size: clamp(0.9375rem, 0.9375vw, 1.125rem);   /* 15 -> 18px */
+  --text-sm-lh: clamp(1.3125rem, 1.4583vw, 1.75rem);      /* 21 -> 28px */
+  --text-sm-ls: 0;
+
+  /* xs — Figma 12 (nav tagline)
+     FLOOR APPLIED: scaled value is 9px, well below the floor. Clamp min is
+     15px, which means this style barely scales at all below ~1920. Flagged:
+     a 12px tagline in a 1920 design is smaller than this system's stated
+     minimum readable size — designer should confirm the intent. */
+  --text-xs-size: clamp(0.9375rem, 0.625vw, 0.9375rem);   /* pinned 15px */
+  --text-xs-ls: 0.025em; /* 2.5% — relative unit, never scaled */
+
+  /* Unitless multipliers scale with font-size — never converted. */
+  --leading-body: 1.6;
+  --leading-tight: 1.2;
+
+  /* --- Spacing: fluid (min = figma*0.75, max = figma exact) ------------- */
+  --space-1: clamp(0.1875rem, 0.2083vw, 0.25rem);      /* 3   -> 4    */
+  --space-2: clamp(0.375rem, 0.4167vw, 0.5rem);        /* 6   -> 8    */
+  --space-2-5: clamp(0.46875rem, 0.5208vw, 0.625rem);  /* 7.5 -> 10   */
+  --space-3: clamp(0.5625rem, 0.625vw, 0.75rem);       /* 9   -> 12   */
+  --space-4: clamp(0.75rem, 0.8333vw, 1rem);           /* 12  -> 16   */
+  --space-5: clamp(0.9375rem, 1.0417vw, 1.25rem);      /* 15  -> 20   */
+  --space-6: clamp(1.125rem, 1.25vw, 1.5rem);          /* 18  -> 24   */
+  --space-7: clamp(1.3125rem, 1.4583vw, 1.75rem);      /* 21  -> 28   */
+  --space-7-5: clamp(1.40625rem, 1.5625vw, 1.875rem);  /* 22.5 -> 30  */
+  --space-8: clamp(1.5rem, 1.6667vw, 2rem);            /* 24  -> 32   */
+  --space-10: clamp(1.875rem, 2.0833vw, 2.5rem);       /* 30  -> 40   */
+  --space-12: clamp(2.25rem, 2.5vw, 3rem);             /* 36  -> 48   */
+  --space-16: clamp(3rem, 3.3333vw, 4rem);             /* 48  -> 64   */
+  --space-20: clamp(3.75rem, 4.1667vw, 5rem);          /* 60  -> 80   */
+  --space-30: clamp(5.625rem, 6.25vw, 7.5rem);         /* 90  -> 120  */
+  --space-40: clamp(7.5rem, 8.3333vw, 10rem);          /* 120 -> 160  */
+
+  /* --- Radius ----------------------------------------------------------- */
+  --radius-none: 0;
+  --radius-card: clamp(0.09375rem, 0.1042vw, 0.125rem); /* 1.5 -> 2px */
+  --radius-icon: clamp(0.41875rem, 0.4635vw, 0.55625rem); /* 6.7 -> 8.9px */
+  --radius-full: 9999px; /* symbolic — never scaled */
+
+  /* --- Borders (never scaled per SCALING.md) ---------------------------- */
+  --border-hairline: 1px;
+
+  /* --- Sizing: fluid component dimensions ------------------------------- */
+  --size-btn-navbar-h: clamp(2.71875rem, 3.0208vw, 3.625rem); /* 43.5 -> 58 */
+  --size-star: clamp(0.75rem, 0.8333vw, 1rem);                /* 18 -> 24   */
+  --size-brand: clamp(1.3125rem, 1.4583vw, 1.75rem);          /* 21 -> 28   */
+  --size-fact-item: clamp(11.25rem, 12.5vw, 15rem);           /* 180 -> 240 */
+  --size-icon-sm: clamp(0.9375rem, 1.0417vw, 1.25rem);        /* 15 -> 20   */
+  --size-btn-card-h: clamp(2.90625rem, 3.2292vw, 3.875rem);   /* 46.5 -> 62 */
+  --size-icon-chip: clamp(1.96875rem, 2.1875vw, 2.625rem);    /* 31.5 -> 42 */
+  --size-highlight-thumb: clamp(26.25rem, 29.1667vw, 35rem);  /* 420 -> 560 */
+  --size-map-aspect: 1600 / 875.56;
+  --size-btn-form-h: clamp(3.28125rem, 3.6458vw, 4.375rem); /* 52.5 -> 70 */
+  --layout-form-max: clamp(49.5rem, 55vw, 66rem);            /* 792 -> 1056 */
+
+  /* --- Layout ----------------------------------------------------------- */
+  --layout-max: 120rem;      /* 1920 source frame — cap, do not extrapolate */
+  --layout-content-max: clamp(75rem, 83.3333vw, 100rem); /* 1200 -> 1600 */
+  --layout-quote-max: clamp(49.5rem, 55vw, 66rem);       /* 792 -> 1056px */
+  --layout-lede-max: clamp(39.65625rem, 44.0625vw, 52.875rem); /* 634.5 -> 846px */
+  --layout-facts-max: clamp(36.875rem, 40.9375vw, 49.125rem); /* 590->786 */
+  --layout-room-card-lg: clamp(43.125rem, 47.9167vw, 57.5rem); /* 690->920px */
+  --layout-room-card-sm: clamp(30.46875rem, 33.85417vw, 40.625rem); /* 487.5->650px */
+  --layout-gutter: var(--space-40);
+  --nav-gutter: var(--space-20);
+
+  /* --- Motion (assumption: not specified in Figma) ---------------------- */
+  --transition-base: 160ms ease;
+}

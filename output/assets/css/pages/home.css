@@ -1,0 +1,301 @@
+/* ==========================================================================
+   Sankara Hill — Home page (page-specific layout only)
+   Sliced so far: navbar, welcome section. Remaining sections land here as
+   they're built. If a style here turns out to be needed on a second page,
+   move it up to components.css.
+   ========================================================================== */
+
+/* --- Welcome section ---------------------------------------------------- */
+
+.p-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16); /* 64 -> 48 */
+  padding: var(--layout-gutter); /* 160 -> 120 */
+  background-color: var(--color-surface-alt);
+}
+
+.p-welcome__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6); /* 24 -> 18 */
+  max-width: var(--layout-content-max);
+  text-align: center;
+}
+
+.p-welcome__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: var(--layout-quote-max);
+}
+
+.p-welcome__quote {
+  font-family: var(--font-title);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  letter-spacing: var(--text-h2-ls);
+  color: var(--color-text);
+}
+
+.p-welcome__lede {
+  max-width: var(--layout-lede-max);
+  font-family: var(--font-body);
+  font-weight: 300; /* Figma: fontStyle "Light" */
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+.p-welcome__image {
+  width: 100%;
+  max-width: var(--layout-content-max);
+  border-radius: var(--radius-card);
+  object-fit: cover;
+  aspect-ratio: 1600 / 800;
+}
+
+/* --- Accommodations section --------------------------------------------- */
+
+.p-accommodations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16); /* 64 -> 48 */
+  padding: var(--layout-gutter); /* 160 -> 120 */
+  background-color: var(--color-surface);
+}
+
+.p-cards-row {
+  display: flex;
+  gap: var(--space-7-5); /* 30 */
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+/* --- Facilities section --------------------------------------------------
+   Figma stacks a centered section-header, a 3-up highlights row, then an
+   "Other Highlights" band (rule-flanked label + wrapping pill grid).
+   ------------------------------------------------------------------- */
+
+.p-facilities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16); /* 64 */
+  padding: var(--layout-gutter); /* 160 */
+  background-color: var(--color-surface-alt);
+}
+
+.p-facilities__header {
+  align-items: center;
+  text-align: center;
+}
+
+.p-facilities__header .c-section-header__title {
+  max-width: var(--layout-quote-max); /* 1056px block in Figma */
+}
+
+.p-facilities__header .c-section-header__lede {
+  max-width: var(--layout-facts-max); /* 786px block in Figma */
+}
+
+.p-highlights-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-7-5); /* 30 */
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+.p-highlights-row > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.p-other-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8); /* 32 */
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+.p-other-highlights__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7-5); /* 30 */
+}
+
+.p-other-highlights__label {
+  flex: 0 0 auto;
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  letter-spacing: 0.015em; /* Figma 1.5% — relative, never scaled */
+  color: var(--color-text-muted);
+}
+
+.p-other-highlights__rule {
+  flex: 1 1 auto;
+  height: var(--border-hairline);
+  background-color: var(--color-border-subtle);
+}
+
+.p-other-highlights .c-facility-grid {
+  gap: var(--space-4); /* 16 — wider than the in-card grid's 12 */
+}
+
+/* --- Location section --------------------------------------------------- */
+
+.p-location {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16); /* 64 */
+  padding: var(--layout-gutter); /* 160 */
+  background-color: var(--color-surface);
+}
+
+.p-location__content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-7-5); /* 30 */
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+.p-location__intro {
+  flex: 0 1 clamp(30.4375rem, 33.8021vw, 40.5625rem); /* 487 -> 649px */
+}
+
+.p-location__landmarks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* 24 */
+  flex: 0 1 clamp(24rem, 26.6667vw, 32rem); /* 384 -> 512px */
+}
+
+.p-location__landmarks-label {
+  font-family: var(--font-body);
+  font-size: var(--text-md-size);
+  line-height: var(--text-md-lh);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.p-location__map {
+  width: 100%;
+  max-width: var(--layout-content-max);
+}
+
+/* --- Reservations section ------------------------------------------------ */
+
+.p-reservations {
+  display: flex;
+  justify-content: center;
+  padding: var(--layout-gutter); /* 160 */
+  background-image: url("../../images/reservations-background.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.p-reservations__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12); /* 48 */
+  width: 100%;
+  max-width: var(--layout-form-max);
+  padding: var(--space-10); /* 40 */
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface);
+}
+
+.p-reservations__header {
+  align-items: center;
+  text-align: center;
+}
+
+.p-reservations__header .c-section-header__title,
+.p-reservations__header .c-section-header__lede {
+  max-width: none;
+}
+
+.p-reservations__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7-5); /* 30 */
+}
+
+/* Figma: check-in 370 / check-out 370 / guests 180 across a 960px row. */
+.p-reservations__guests {
+  flex: 0 1 clamp(8.4375rem, 9.375vw, 11.25rem); /* 135 -> 180px */
+}
+
+.p-reservations__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4); /* 16 */
+  padding-top: var(--space-2); /* 8 */
+}
+
+.p-reservations__note {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* --- Responsive (below `md`, no mobile frame scanned — assumption) ----- */
+
+@media (max-width: 768px) {
+  .p-welcome,
+  .p-accommodations,
+  .p-facilities,
+  .p-location {
+    padding: var(--space-8);
+  }
+
+  .p-highlights-row,
+  .p-location__content {
+    flex-direction: column;
+  }
+
+  .c-fact-strip {
+    flex-direction: column;
+    align-items: center;
+    max-width: 20rem;
+    gap: var(--space-4);
+  }
+
+  .c-fact-item {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .c-section-header--split {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .c-section-header__lede {
+    max-width: none;
+  }
+
+  .p-cards-row {
+    flex-direction: column;
+  }
+
+  .c-room-card--media,
+  .c-room-card--detail {
+    flex-basis: auto;
+    width: 100%;
+  }
+}

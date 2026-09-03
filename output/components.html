@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sankara Hill — Style Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f%5B%5D=switzer@300,400,500,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <style>
+    /* style-guide-only layout scaffolding — not a real page component */
+    body { padding: var(--space-12); display: flex; flex-direction: column; gap: var(--space-16); }
+    .sg-section h2 { margin-bottom: var(--space-6); }
+    .sg-row { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: center; }
+    .sg-swatch { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm-size); }
+    .sg-swatch-color { width: 6rem; height: 3.5rem; border-radius: var(--radius-card); border: 1px solid var(--color-border); }
+    .sg-note { color: var(--color-text-muted); font-size: var(--text-sm-size); }
+  </style>
+</head>
+<body>
+  <h1>Sankara Hill — Style Guide</h1>
+  <p class="sg-note">Sliced so far: navbar, welcome, accommodations, facilities, location, reservations, footer. Sections below reflect components.css as it stands; more will be appended as later slices land.</p>
+  <p class="sg-note"><strong>Fluid mode</strong> (SCALING.md §Fluid mode): every scaled value is <code>clamp(scaled_1440, fluid_vw, figma_1920)</code>. At a 1920px viewport this renders exactly like Figma; at 1440px it renders the 0.75-scaled value; between the two it interpolates. Resize the window to verify.</p>
+
+  <section class="sg-section" id="colors">
+    <h2>Color Palette</h2>
+    <div class="sg-row">
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-0)"></div>--color-neutral-0 #ffffff</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-200)"></div>--color-neutral-200 #e2e8f0</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-400)"></div>--color-neutral-400 #94a3b8</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-500)"></div>--color-neutral-500 #64748b</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-600)"></div>--color-neutral-600 #475569</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-neutral-1000)"></div>--color-neutral-1000 #020617</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-teal-50)"></div>--color-teal-50 #f2f7f8</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-teal-100)"></div>--color-teal-100 #ddecee</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-teal-700)"></div>--color-teal-700 #1f4b51</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-teal-800)"></div>--color-teal-800 #15383c</div>
+      <div class="sg-swatch"><div class="sg-swatch-color" style="background:var(--color-teal-950)"></div>--color-teal-950 #081a1c</div>
+    </div>
+  </section>
+
+  <section class="sg-section" id="typography">
+    <h2>Typography</h2>
+    <h1 style="font-size:var(--text-h2-size);line-height:var(--text-h2-lh)">H1 / Display — Instrument Serif, fluid 43.5–58px</h1>
+    <h2 style="font-size:var(--text-h3-size);line-height:var(--text-h3-lh)">H2 — Instrument Serif, fluid 27–36px</h2>
+    <h3 style="font-size:var(--text-h4-size);line-height:var(--text-h4-lh)">H3 — Instrument Serif, fluid 21–28px</h3>
+    <p style="font-size:var(--text-md-size)">Body / md — Switzer, fluid 15–20px (min sits at font floor)</p>
+    <p style="font-size:var(--text-sm-size)">Body / sm — Switzer, fluid 15–18px (floor applied, literal-scaled value would be 13.5px)</p>
+  </section>
+
+  <section class="sg-section" id="buttons">
+    <h2>Buttons</h2>
+    <div class="sg-row">
+      <a class="c-btn c-btn--navbar" href="#">Enquire Now</a>
+      <span class="sg-note">c-btn--navbar · teal-800, 58px, uppercase 20px</span>
+    </div>
+    <div class="sg-row" style="max-width:24rem;margin-top:var(--space-6)">
+      <a class="c-btn c-btn--card" href="#">Enquire Now</a>
+    </div>
+    <p class="sg-note">c-btn--card · teal-800 fill, 62px, fills its card. All CTA variants use same fill, uppercase body type.</p>
+  </section>
+
+  <section class="sg-section" id="section-header">
+    <h2>Section Header — c-section-header</h2>
+    <div class="c-section-header c-section-header--split">
+      <div class="c-section-header__text">
+        <p class="c-section-header__eyebrow">Accommodations</p>
+        <h3 class="c-section-header__title">Designed for Deep Solitude</h3>
+      </div>
+      <p class="c-section-header__lede">41 exclusive spaces curated to offer uninterrupted ocean or garden panoramas, with spacious private footprints.</p>
+    </div>
+  </section>
+
+  <section class="sg-section" id="facility-pill">
+    <h2>Facility Pill — c-facility-pill / c-facility-grid</h2>
+    <ul class="c-facility-grid">
+      <li class="c-facility-pill">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-droplet"></use></svg>
+        <span class="c-facility-pill__label">Infinity Pool</span>
+      </li>
+      <li class="c-facility-pill">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-utensils"></use></svg>
+        <span class="c-facility-pill__label">Restaurant (Puṇṇa)</span>
+      </li>
+      <li class="c-facility-pill">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-wifi"></use></svg>
+        <span class="c-facility-pill__label">Free WiFi</span>
+      </li>
+      <li class="c-facility-pill">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-car"></use></svg>
+        <span class="c-facility-pill__label">Airport Transfer</span>
+      </li>
+    </ul>
+    <p class="sg-note">Icons sourced from <code>lucide-static</code> (matches the design's Lucide icon set exactly — see <code>package.json</code>), inlined as a sprite with <code>currentColor</code> so CSS controls the stroke. Available: bed, expand (maximize-2), droplet, utensils, flower, sun, bell, glass-water, circle-x, activity, wifi, users, car.</p>
+  </section>
+
+  <section class="sg-section" id="room-card">
+    <h2>Room Card — c-room-card</h2>
+    <p class="sg-note">Two variants: <code>--media</code> (image only, no padding) and <code>--detail</code> (40px padding, header + facilities + CTA pinned bottom).</p>
+    <article class="c-room-card c-room-card--detail" style="max-width:40.625rem">
+      <div class="c-room-card__body">
+        <div class="c-room-card__header">
+          <h3 class="c-room-card__title">Ocean Hill Pool Villa</h3>
+          <div class="c-room-card__meta">
+            <span class="c-facility-pill">
+              <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-bed"></use></svg>
+              <span class="c-facility-pill__label">16 Rooms</span>
+            </span>
+            <span class="c-room-card__meta-divider" aria-hidden="true"></span>
+            <span class="c-facility-pill">
+              <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-expand"></use></svg>
+              <span class="c-facility-pill__label">41 SQM</span>
+            </span>
+          </div>
+          <p class="c-room-card__description">Elegant and streamlined elevated suites offering expansive floor-to-ceiling glass doors.</p>
+        </div>
+        <div class="c-room-card__facilities">
+          <h4 class="c-room-card__facilities-label">Room Facilities</h4>
+          <ul class="c-facility-grid">
+            <li class="c-facility-pill">
+              <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-flower"></use></svg>
+              <span class="c-facility-pill__label">Radha Spa</span>
+            </li>
+            <li class="c-facility-pill">
+              <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
+              <span class="c-facility-pill__label">Yoga Pavilion</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <a class="c-btn c-btn--card" href="#">Enquire Now</a>
+    </article>
+  </section>
+
+  <section class="sg-section" id="navigation">
+    <h2>Navigation — c-navbar</h2>
+    <p class="sg-note">Resize the viewport below 768px to see the mobile toggle panel.</p>
+    <header class="c-navbar" data-nav-open="false" id="sg-nav" style="position:static;border:1px solid var(--color-border)">
+      <div class="c-navbar__logo">
+        <span class="c-navbar__brand">The Sankara Hill</span>
+        <span class="c-navbar__tagline">Nusa Penida, Bali · 5-Star Luxury</span>
+      </div>
+      <button type="button" class="c-navbar__toggle" aria-expanded="false" aria-controls="sg-nav-panel" aria-label="Toggle navigation menu">
+        <span class="c-navbar__toggle-icon"></span>
+      </button>
+      <div class="c-navbar__panel" id="sg-nav-panel">
+        <nav class="c-navbar__links" aria-label="Primary">
+          <a class="c-navbar__link" href="#" aria-current="page">About</a>
+          <a class="c-navbar__link" href="#">Accommodations</a>
+          <a class="c-navbar__link" href="#">Facilities</a>
+          <a class="c-navbar__link" href="#">Location</a>
+          <a class="c-navbar__link" href="#">Contact</a>
+        </nav>
+        <div class="c-navbar__actions">
+          <div class="c-navbar__lang" role="group" aria-label="Language">
+            <button type="button" class="c-navbar__lang-option" aria-current="true">EN</button>
+            <span class="c-navbar__lang-divider" aria-hidden="true"></span>
+            <button type="button" class="c-navbar__lang-option">ID</button>
+          </div>
+          <a class="c-btn c-btn--navbar" href="#">Enquire Now</a>
+        </div>
+      </div>
+    </header>
+  </section>
+
+  <section class="sg-section" id="star-rating">
+    <h2>Star Rating — c-star-rating</h2>
+    <div class="c-star-rating" role="img" aria-label="5 out of 5 stars">
+      <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+      <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+      <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+      <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+      <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+    </div>
+  </section>
+
+  <section class="sg-section" id="fact-strip">
+    <h2>Fact Strip — c-fact-strip / c-fact-item</h2>
+    <dl class="c-fact-strip">
+      <div class="c-fact-item">
+        <dt class="c-fact-item__label">Accommodations</dt>
+        <dd class="c-fact-item__value">41 Rooms</dd>
+      </div>
+      <div class="c-fact-item">
+        <dt class="c-fact-item__label">Suites</dt>
+        <dd class="c-fact-item__value">16 Suites</dd>
+      </div>
+      <div class="c-fact-item">
+        <dt class="c-fact-item__label">Villas</dt>
+        <dd class="c-fact-item__value">25 Villas</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="sg-section" id="highlight-block">
+    <h2>Highlight Block — c-highlight-block</h2>
+    <div class="sg-row" style="max-width:26rem">
+      <article class="c-highlight-block">
+        <img class="c-highlight-block__thumbnail" src="assets/images/highlight-infinity-pool.png" alt="Infinity pool overlooking the ocean at sunset" width="513" height="560" loading="lazy" />
+        <div class="c-highlight-block__text">
+          <h3 class="c-highlight-block__title">Infinity Pool</h3>
+          <p class="c-highlight-block__description">A architectural marvel hovering over Penida&rsquo;s sunset crest.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sg-section" id="facility-pill-chip">
+    <h2>Facility Pill (chip variant) — c-facility-pill--chip</h2>
+    <p class="sg-note">Facilities-section variant: filled circular icon chip (teal-100 bg, teal-950 icon), asymmetric padding. Compare to the plain outline variant under Facility Pill above.</p>
+    <ul class="c-facility-grid">
+      <li class="c-facility-pill c-facility-pill--chip">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-wifi"></use></svg>
+        <span class="c-facility-pill__label">Free WiFi</span>
+      </li>
+      <li class="c-facility-pill c-facility-pill--chip">
+        <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-car"></use></svg>
+        <span class="c-facility-pill__label">Airport Transfer</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="sg-section" id="landmark-list">
+    <h2>Landmark List — c-landmark-list</h2>
+    <ul class="c-landmark-list" style="max-width:32rem">
+      <li class="c-landmark-item">
+        <span class="c-landmark-item__name">Nusa Penida Harbor</span>
+        <span class="c-landmark-item__duration">15 – 20 min</span>
+      </li>
+      <li class="c-landmark-item">
+        <span class="c-landmark-item__name">Kelingking Beach</span>
+        <span class="c-landmark-item__duration">45 – 60 min</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="sg-section" id="map">
+    <h2>Map Embed — c-map</h2>
+    <p class="sg-note">Figma shows a static Maps mockup; production uses the live Google Maps iframe at the same aspect ratio.</p>
+    <div style="max-width:40rem">
+      <iframe
+        class="c-map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.6179765695642!2d115.26345637512888!3d-8.536417491506574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23d96d5dfb91b%3A0x13b46ec39e228794!2sThe%20Sankara%20Resort!5e0!3m2!1sid!2sid!4v1788331698450!5m2!1sid!2sid"
+        title="Map showing The Sankara Hill on Nusa Penida"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <section class="sg-section" id="form-elements">
+    <h2>Form Elements — c-field</h2>
+    <p class="sg-note">Native inputs restyled (never replaced): text, tel, email, date, select — all keyboard-operable with a visible focus ring.</p>
+    <div style="max-width:40rem;display:flex;flex-direction:column;gap:var(--space-6)">
+      <div class="c-field">
+        <label class="c-field__label" for="sg-fullname">Full Name *</label>
+        <input class="c-field__control" id="sg-fullname" type="text" placeholder="e.g. Alexander Mercer" />
+      </div>
+      <div class="c-field-row">
+        <div class="c-field">
+          <label class="c-field__label" for="sg-checkin">Check-In Date *</label>
+          <input class="c-field__control c-field__control--date" id="sg-checkin" type="date" />
+        </div>
+        <div class="c-field" style="flex:0 1 11.25rem">
+          <label class="c-field__label" for="sg-guests">Guests</label>
+          <select class="c-field__control c-field__control--select" id="sg-guests">
+            <option>2 Guests</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sg-section" id="btn-form">
+    <h2>Form Submit Button — c-btn--form</h2>
+    <div class="sg-row" style="max-width:24rem">
+      <button class="c-btn c-btn--form" type="button">Send Booking Enquiry</button>
+    </div>
+    <p class="sg-note">teal-800 fill, uppercase — same as navbar CTA, full width, 70px tall.</p>
+  </section>
+
+  <section class="sg-section" id="footer">
+    <h2>Footer — c-footer</h2>
+    <p class="sg-note">Global closing band. teal-800 surface, all text neutral-0 (no muted tier on dark), 1px teal-700 divider as the only depth mechanic. Social icons are real Figma SVG exports, not redraws.</p>
+    <footer class="c-footer">
+      <div class="c-footer__content">
+        <div class="c-footer__brand">
+          <div class="c-footer__identity">
+            <p class="c-footer__brand-name">The Sankara Hill</p>
+            <p class="c-footer__tagline">Nusa Penida &middot; Bali</p>
+          </div>
+          <p class="c-footer__contact">A 5-star hilltop ocean-view luxury escape offering pristine island solitude in Bali&rsquo;s most dramatic natural environment.</p>
+
+          <ul class="c-footer__social">
+            <li>
+              <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on Instagram">
+                <img class="c-footer__social-icon" src="assets/images/footer/bxl-instagram-alt.svg" alt="" width="24" height="24" loading="lazy" />
+              </a>
+            </li>
+            <li>
+              <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on Facebook">
+                <img class="c-footer__social-icon" src="assets/images/footer/bxl-facebook.svg" alt="" width="24" height="24" loading="lazy" />
+              </a>
+            </li>
+            <li>
+              <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on TikTok">
+                <img class="c-footer__social-icon" src="assets/images/footer/bxl-tiktok.svg" alt="" width="24" height="24" loading="lazy" />
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <address class="c-footer__contacts">
+          <h3 class="c-footer__heading">RESORT CONTACTS</h3>
+          <div class="c-footer__contact-list">
+            <a class="c-footer__contact-link" href="https://maps.google.com/?q=Kutampi+Atas,+Nusa+Penida,+Bali,+Indonesia" target="_blank" rel="noopener">A: Kutampi Atas, Nusa Penida, Bali, Indonesia</a>
+            <a class="c-footer__contact-link" href="tel:+62361123456">P: +62 361 123 456</a>
+            <a class="c-footer__contact-link" href="mailto:reservation@sankarahillpenida.com">E: reservation@sankarahillpenida.com</a>
+          </div>
+        </address>
+
+        <nav class="c-footer__explore" aria-label="Explore">
+          <h3 class="c-footer__heading">EXPLORE</h3>
+          <div class="c-footer__links">
+            <a class="c-footer__link" href="#">About Resort</a>
+            <a class="c-footer__link" href="#">Accommodations</a>
+            <a class="c-footer__link" href="#">Pu&#7751;&#7751;a Restaurant</a>
+            <a class="c-footer__link" href="#">Radha Wellness Spa</a>
+            <a class="c-footer__link" href="#">Event Venues</a>
+          </div>
+        </nav>
+      </div>
+
+      <div class="c-footer__bottom">
+        <p class="c-footer__legal">&copy; 2026 The Sankara Hill Penida. All rights reserved.</p>
+
+        <nav class="c-footer__legal-links" aria-label="Legal">
+          <a class="c-footer__link" href="#">Privacy Policy</a>
+          <a class="c-footer__link" href="#">Terms of Service</a>
+        </nav>
+      </div>
+    </footer>
+  </section>
+
+  <svg class="u-visually-hidden" aria-hidden="true">
+    <defs>
+    <symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332.606-6.064 5.828 1.48 8.279L12 18.897l-7.416 4.971 1.48-8.279L0 8.761l8.332-.606L12 .587z"/></symbol>
+    <symbol id="icon-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 4v16" />
+    <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+    <path d="M2 17h20" />
+    <path d="M6 8v9" />
+    </symbol>
+    <symbol id="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6" />
+    <path d="m21 3-7 7" />
+    <path d="m3 21 7-7" />
+    <path d="M9 21H3v-6" />
+    </symbol>
+    <symbol id="icon-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />
+    </symbol>
+    <symbol id="icon-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+    <path d="M7 2v20" />
+    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+    </symbol>
+    <symbol id="icon-flower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3" />
+    <path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5" />
+    <path d="M12 7.5V9" />
+    <path d="M7.5 12H9" />
+    <path d="M16.5 12H15" />
+    <path d="M12 16.5V15" />
+    <path d="m8 8 1.88 1.88" />
+    <path d="M14.12 9.88 16 8" />
+    <path d="m8 16 1.88-1.88" />
+    <path d="M14.12 14.12 16 16" />
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" />
+    <path d="M12 20v2" />
+    <path d="m4.93 4.93 1.41 1.41" />
+    <path d="m17.66 17.66 1.41 1.41" />
+    <path d="M2 12h2" />
+    <path d="M20 12h2" />
+    <path d="m6.34 17.66-1.41 1.41" />
+    <path d="m19.07 4.93-1.41 1.41" />
+    </symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+    <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+    </symbol>
+    <symbol id="icon-glass-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5.116 4.104A1 1 0 0 1 6.11 3h11.78a1 1 0 0 1 .994 1.105L17.19 20.21A2 2 0 0 1 15.2 22H8.8a2 2 0 0 1-2-1.79z" />
+    <path d="M6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0" />
+    </symbol>
+    <symbol id="icon-circle-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+    <path d="m15 9-6 6" />
+    <path d="m9 9 6 6" />
+    </symbol>
+    <symbol id="icon-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+    </symbol>
+    <symbol id="icon-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 20h.01" />
+    <path d="M2 8.82a15 15 0 0 1 20 0" />
+    <path d="M5 12.859a10 10 0 0 1 14 0" />
+    <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+    </symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <circle cx="9" cy="7" r="4" />
+    </symbol>
+    <symbol id="icon-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+    <circle cx="7" cy="17" r="2" />
+    <path d="M9 17h6" />
+    <circle cx="17" cy="17" r="2" />
+    </symbol>
+    </defs>
+  </svg>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
