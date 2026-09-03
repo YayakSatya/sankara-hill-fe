@@ -51,6 +51,24 @@
   padding-inline: var(--nav-gutter); /* 80 -> 60 */
   background-color: var(--color-surface);
   border-bottom: var(--border-hairline) solid var(--color-border);
+  transition: transform var(--transition-base);
+}
+
+/* home.js sets this while scrolling down, clears it on scroll up. */
+.c-navbar.is-hidden {
+  transform: translateY(-100%);
+}
+
+/* Never hide the bar out from under someone using it. */
+.c-navbar:focus-within,
+.c-navbar[data-nav-open="true"] {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-navbar {
+    transition: none;
+  }
 }
 
 .c-navbar__logo {
@@ -486,10 +504,19 @@
   gap: var(--space-6); /* 24 */
 }
 
-.c-highlight-block__thumbnail {
+/* Tight clip wrapper around the parallaxing thumbnail: the scale+translate
+   in home.js must bleed into this box, not into the text below it. */
+.c-highlight-block__media {
   width: 100%;
   height: var(--size-highlight-thumb);
+  overflow: hidden;
   border-radius: var(--radius-card);
+}
+
+.c-highlight-block__thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

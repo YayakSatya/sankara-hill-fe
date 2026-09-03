@@ -42,6 +42,7 @@
   /* --- Color: semantic (reserved — form states not yet designed) -------- */
   --color-error-500: #ef4444;
   --color-warning-500: #f59e0b;
+  --color-semantic-success-50: #ecfdf5; /* accommodations section title (Figma 4052:380) */
 
   /* --- Color: decorative (local, not a Figma variable — flagged per
      SCANING-FIGMA.md; promote if reused beyond the star-rating icon) ----- */
@@ -163,4 +164,9 @@
 
   /* --- Motion (assumption: not specified in Figma) ---------------------- */
   --transition-base: 160ms ease;
+  /* Strong custom curves — the built-in keywords are too weak for deliberate
+     motion. ease-out for anything entering or exiting; ease-in-out for things
+     moving across the screen. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }

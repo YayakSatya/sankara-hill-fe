@@ -50,30 +50,262 @@
   color: var(--color-text-muted);
 }
 
-.p-welcome__image {
+.p-welcome__media {
   width: 100%;
   max-width: var(--layout-content-max);
+  overflow: hidden;
   border-radius: var(--radius-card);
+}
+
+.p-welcome__image {
+  display: block;
+  width: 100%;
   object-fit: cover;
   aspect-ratio: 1600 / 800;
 }
 
-/* --- Accommodations section --------------------------------------------- */
+/* --- Accommodations section ---------------------------------------------
+   Figma 4052:375 (1920x1628): dark teal band. Section header reuses
+   c-section-header (stacked, centered) with inverse colors, then a row of
+   a full-bleed 1081x1100 image panel and an 839px detail column (title ->
+   519x540 inset image -> icon meta row). Three villa types share the row;
+   on desktop the section pins and scroll pushes the active villa vertically.
+   Below 1024px it is a plain stacked list -- no pin, no animation.
+   ------------------------------------------------------------------- */
 
 .p-accommodations {
+  background-color: var(--color-surface-dark);
+}
+
+/* Mobile-first: no pin. Each villa is just a stacked block. */
+.p-accommodations__pin {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-16); /* 64 -> 48 */
   padding: var(--layout-gutter); /* 160 -> 120 */
-  background-color: var(--color-surface);
+}
+
+/* Same treatment as the facilities header: centered on the shared grid. */
+.p-accommodations__header {
+  align-items: center;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Dark band: swap the section-header ink to its inverse. */
+.p-accommodations__header .c-section-header__eyebrow {
+  color: var(--color-text-inverse);
+}
+
+.p-accommodations__header .c-section-header__title {
+  color: var(--color-semantic-success-50);
+}
+
+.p-accommodations__header .c-section-header__lede {
+  color: var(--color-text-inverse);
 }
 
 .p-cards-row {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.p-villa-slide {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-7-5); /* 30 */
+}
+
+.p-villa-slide__image,
+.p-villa-slide__inset {
+  display: block;
   width: 100%;
-  max-width: var(--layout-content-max);
+  object-fit: cover;
+}
+
+.p-villa-slide__image {
+  aspect-ratio: 1081 / 1100;
+}
+
+.p-villa-slide__inset-media {
+  max-width: clamp(24.328125rem, 27.0313vw, 32.4375rem); /* 389.25 -> 519px */
+  overflow: hidden;
+}
+
+.p-villa-slide__inset {
+  width: 100%;
+  aspect-ratio: 519 / 540;
+}
+
+.p-villa-slide__detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-7-5);
+}
+
+/* Figma 4052:405 — 519px block, Switzer Light 18 / 160%. */
+.p-villa-slide__description {
+  max-width: clamp(25.9375rem, 26.9792vw, 32.4375rem); /* 415.5 -> 519px */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: var(--text-sm-size);
+  line-height: var(--leading-body);
+  color: var(--color-text-inverse);
+}
+
+/* Figma 4052:406 — Switzer Regular 18/28, underlined per design. */
+.p-villa-slide__link {
+  font-family: var(--font-body);
+  font-size: var(--text-sm-size);
+  line-height: var(--text-sm-lh);
+  color: var(--color-text-inverse);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-transform: uppercase;
+}
+
+.p-villa-slide__link:focus-visible {
+  outline: var(--border-hairline) solid currentColor;
+  outline-offset: 0.25em;
+}
+
+.p-villa-slide__title {
+  font-family: var(--font-title);
+  font-size: var(--text-h3-size); /* 36px */
+  line-height: var(--text-h3-lh); /* 44px */
+  letter-spacing: var(--text-h3-ls); /* -0.5px */
+  color: var(--color-text-inverse);
+}
+
+/* Icon meta row: "16 Rooms" | "41 SQM" (Figma 4052:391, itemSpacing 12). */
+.p-villa-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3); /* 12 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.p-villa-meta__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5); /* 10 */
+}
+
+.p-villa-meta__icon {
+  flex: 0 0 auto;
+  width: var(--size-icon-sm); /* 20 */
+  height: var(--size-icon-sm);
+  color: var(--color-text-inverse);
+}
+
+.p-villa-meta__label {
+  font-family: var(--font-body);
+  font-weight: 300; /* Figma: fontStyle "Light" */
+  font-size: var(--text-sm-size); /* 18px */
+  line-height: var(--leading-body); /* 160% */
+  color: var(--color-text-inverse);
+}
+
+.p-villa-meta__divider {
+  flex: 0 0 auto;
+  width: var(--border-hairline);
+  align-self: stretch;
+  background-color: var(--color-teal-700); /* Figma #1f4b51 */
+}
+
+/* Desktop: pin the CARDS ROW at 100vh and cross-fade villas on scroll
+   progress. The header above it scrolls away -- accepted per design review.
+   home.js toggles .is-active from scroll progress; without JS the first
+   slide stays visible. */
+@media (min-width: 1024px) {
+  .p-accommodations__pin {
+    /* Block containing flow keeps position: sticky reliable across browsers. */
+    display: block;
+    position: relative;
+    /* 3 villas -> one viewport of dwell each, plus one for entry/exit. */
+    height: 400vh;
+    padding: 0;
+  }
+
+  /* Full section gutter, same as every other section on the page. */
+  .p-accommodations__header {
+    flex: 0 0 auto;
+    max-width: none;
+    padding: var(--layout-gutter) var(--layout-gutter) var(--space-30);
+  }
+
+  /* Figma cards-row is the full 1920 -- no gutter, panels bleed to both edges.
+     This row is the pinned element: 100vh, sticks to top, header scrolls off. */
+  .p-cards-row {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .p-villa-slide {
+    position: absolute;
+    inset: 0;
+    flex-direction: row;
+    gap: 0; /* Figma cards-row: panels butt together */
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out);
+    pointer-events: none;
+  }
+
+  .p-villa-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .p-villa-slide__media {
+    flex: 1 1 56.302%; /* 1081 / 1920 */
+    min-width: 0;
+  }
+
+  .p-villa-slide__image {
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .p-villa-slide__detail {
+    flex: 0 0 43.698%; /* 839 / 1920 */
+    justify-content: center;
+    gap: var(--space-6); /* 24 */
+    min-height: 0;
+    /* 839 - 2*160 = 519 content width, exactly the inset width (Figma). */
+    padding: var(--space-12) var(--space-40);
+  }
+
+  .p-villa-slide__title,
+  .p-villa-slide__inset-media,
+  .p-villa-meta,
+  .p-villa-slide__description,
+  .p-villa-slide__link {
+    flex: 0 0 auto;
+  }
+
+  /* Figma 4052:389: fixed 519x540 portrait inset in the detail column,
+     not a stretched panel. The wrapper sizes itself and never fills the
+     column; the image fills the wrapper. */
+  .p-villa-slide__inset-media {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 519 / 540;
+  }
+
+  .p-villa-slide__inset {
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
 }
 
 /* --- Facilities section --------------------------------------------------
@@ -257,9 +489,12 @@
 
 @media (max-width: 768px) {
   .p-welcome,
-  .p-accommodations,
   .p-facilities,
   .p-location {
+    padding: var(--space-8);
+  }
+
+  .p-accommodations__pin {
     padding: var(--space-8);
   }
 
@@ -280,22 +515,30 @@
     width: 100%;
   }
 
-  .c-section-header--split {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .c-section-header__lede {
     max-width: none;
   }
+}
 
-  .p-cards-row {
-    flex-direction: column;
-  }
+/* --- image parallax ---------------------------------------------------- */
+/* home.js drives translate3d() + scale() on these; the scale gives movement
+   room so the crop never slides past the element's own edge. The scale is
+   applied from JS rather than here on purpose: a CSS-only scale would leave
+   a visitor without JS staring at a permanent 12% zoom crop that never
+   moves. With no JS these images simply render at their natural crop.
+   `will-change` is likewise JS-toggled, only while an element is in range,
+   so ten images don't hold ten compositor layers for the page lifetime. */
+[data-parallax] {
+  backface-visibility: hidden;
+}
 
-  .c-room-card--media,
-  .c-room-card--detail {
-    flex-basis: auto;
-    width: 100%;
-  }
+/* Secondary backstop only. Every parallax image now has its own tight
+   .*__media wrapper (overflow:hidden right at the image edge) — that
+   wrapper is the real clip. These section-level rules just catch anything
+   that manages to bleed past a wrapper (e.g. a future non-wrapped image). */
+.p-welcome,
+.p-villa-slide__media,
+.p-villa-slide__detail,
+.c-highlight-block {
+  overflow: hidden;
 }

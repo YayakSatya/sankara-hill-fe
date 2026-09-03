@@ -42,7 +42,9 @@
     <div class="c-navbar__panel" id="site-nav-panel">
       <nav class="c-navbar__links" aria-label="Primary">
         <a class="c-navbar__link" href="#about" aria-current="page">About</a>
-        <a class="c-navbar__link" href="#accommodations">Accommodations</a>
+        <!-- Accommodations link hidden: anchor-jumping into the pinned scroll
+             animation breaks the villa swap sequence mid-way. -->
+        <a class="c-navbar__link" href="#accommodations" hidden>Accommodations</a>
         <a class="c-navbar__link" href="#facilities">Facilities</a>
         <a class="c-navbar__link" href="#location">Location</a>
         <a class="c-navbar__link" href="#contact">Contact</a>
@@ -91,110 +93,136 @@
           <dd class="c-fact-item__value">25 Villas</dd>
         </div>
       </dl>
-      <img
-        class="p-welcome__image"
-        src="assets/images/welcome-cliffside-view.png"
-        alt="The Sankara Hill resort cliffside view over the ocean"
-        width="1600"
-        height="800"
-        loading="lazy"
-      />
+      <div class="p-welcome__media">
+        <img
+          class="p-welcome__image"
+          src="assets/images/welcome-image.jpg"
+          alt="The Sankara Hill resort cliffside view over the ocean"
+          width="1600"
+          height="800"
+          loading="lazy"
+          data-parallax="0.12"
+        />
+      </div>
     </section>
 
+    <!-- ==================================================================
+         Accommodations — Figma 4052:375 (1920x1628), dark teal band.
+         Vertical section header (eyebrow + title, gap 64), then a full-bleed
+         1081px image panel on the left and an 839px detail column on the
+         right. Desktop (>=1024px) pins the section and scroll progress swaps
+         the active villa; below that it's a plain stacked list.
+         ================================================================== -->
     <section class="p-accommodations" id="accommodations" aria-labelledby="accommodations-heading">
-      <div class="c-section-header c-section-header--split">
-        <div class="c-section-header__text">
+      <div class="p-accommodations__pin" data-villa-slider>
+        <header class="c-section-header p-accommodations__header">
           <p class="c-section-header__eyebrow">Accommodations</p>
-          <h2 id="accommodations-heading" class="c-section-header__title">Designed for Deep Solitude</h2>
-        </div>
-        <p class="c-section-header__lede">41 exclusive spaces curated to offer uninterrupted ocean or garden panoramas, with spacious private footprints.</p>
-      </div>
+          <h2 class="c-section-header__title" id="accommodations-heading">Designed for Deep Solitude</h2>
+          <p class="c-section-header__lede">41 exclusive spaces curated to offer uninterrupted ocean or garden panoramas, with spacious private footprints.</p>
+        </header>
 
-      <div class="p-cards-row">
-        <article class="c-room-card c-room-card--media">
-          <img
-            class="c-room-card__image"
-            src="assets/images/room-ocean-hill-pool-villa.png"
-            alt="Interior of the Ocean Hill Pool Villa with floor-to-ceiling glass doors"
-            width="920"
-            height="734"
-            loading="lazy"
-          />
-        </article>
-
-        <article class="c-room-card c-room-card--detail">
-          <div class="c-room-card__body">
-            <div class="c-room-card__header">
-              <h3 class="c-room-card__title">Ocean Hill Pool Villa</h3>
-              <div class="c-room-card__meta">
-                <span class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-bed"></use></svg>
-                  <span class="c-facility-pill__label">16 Rooms</span>
-                </span>
-                <span class="c-room-card__meta-divider" aria-hidden="true"></span>
-                <span class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-expand"></use></svg>
-                  <span class="c-facility-pill__label">41 SQM</span>
-                </span>
-              </div>
-              <p class="c-room-card__description">Elegant and streamlined elevated suites offering expansive floor-to-ceiling glass doors opening onto Nusa Penida&rsquo;s sunset coastal profile.</p>
+        <div class="p-cards-row">
+          <article class="p-villa-slide is-active" data-villa-slide aria-hidden="false">
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/ocean-hill-pool-villa-big-image.jpg"
+                   alt="Ocean Hill Pool Villa exterior with its private pool overlooking the sea" width="1081" height="1100" loading="lazy" decoding="async" data-parallax="0.08">
             </div>
 
-            <div class="c-room-card__facilities">
-              <h4 class="c-room-card__facilities-label">Room Facilities</h4>
-              <ul class="c-facility-grid">
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-droplet"></use></svg>
-                  <span class="c-facility-pill__label">Infinity Pool</span>
+            <div class="p-villa-slide__detail">
+              <h3 class="p-villa-slide__title">Ocean Hill Pool Villa</h3>
+
+              <div class="p-villa-slide__inset-media">
+                <img class="p-villa-slide__inset" src="assets/images/ocean-hill-pool-villa-small-image.jpg"
+                     alt="Ocean Hill Pool Villa interior with private pool and ocean view" width="519" height="540" loading="lazy" decoding="async" data-parallax="0.14">
+              </div>
+
+              <ul class="p-villa-meta">
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                  <span class="p-villa-meta__label">21 Units</span>
                 </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-utensils"></use></svg>
-                  <span class="c-facility-pill__label">Restaurant (Puṇṇa)</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-flower"></use></svg>
-                  <span class="c-facility-pill__label">Radha Spa</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
-                  <span class="c-facility-pill__label">Yoga Pavilion</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-bell"></use></svg>
-                  <span class="c-facility-pill__label">Wedding Chapel</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-glass-water"></use></svg>
-                  <span class="c-facility-pill__label">Pool Bar</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
-                  <span class="c-facility-pill__label">Room Service</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-activity"></use></svg>
-                  <span class="c-facility-pill__label">Gym</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-wifi"></use></svg>
-                  <span class="c-facility-pill__label">Free WiFi</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-users"></use></svg>
-                  <span class="c-facility-pill__label">Function Room</span>
-                </li>
-                <li class="c-facility-pill">
-                  <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-car"></use></svg>
-                  <span class="c-facility-pill__label">Airport Transfer</span>
+                <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                  <span class="p-villa-meta__label">51 SQM</span>
                 </li>
               </ul>
-            </div>
-          </div>
 
-          <a class="c-btn c-btn--card" href="#reservations">Enquire Now</a>
-        </article>
+              <p class="p-villa-slide__description">Perched above the ocean, this 51 sqm villa pairs a private pool and spacious living area with contemporary tropical design — an elevated, tranquil island escape.</p>
+
+              <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+            </div>
+          </article>
+
+          <article class="p-villa-slide" data-villa-slide aria-hidden="true">
+            <!-- Content: TSH_Hotel_Information_Presentation.md, "Ocean Hill Suite" section. -->
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/ocean-hill-suite-big-image.jpg"
+                   alt="Ocean Hill Suite exterior view" width="1081" height="1100" loading="lazy" decoding="async" data-parallax="0.08">
+            </div>
+
+            <div class="p-villa-slide__detail">
+              <h3 class="p-villa-slide__title">Ocean Hill Suite</h3>
+
+              <div class="p-villa-slide__inset-media">
+                <img class="p-villa-slide__inset" src="assets/images/ocean-hill-suite-small-image.jpg"
+                     alt="Ocean Hill Suite interior with king-size bed and private balcony over the ocean" width="519" height="540" loading="lazy" decoding="async" data-parallax="0.14">
+              </div>
+
+              <ul class="p-villa-meta">
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                  <span class="p-villa-meta__label">16 Rooms</span>
+                </li>
+                <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                  <span class="p-villa-meta__label">41 SQM</span>
+                </li>
+              </ul>
+
+              <p class="p-villa-slide__description">Spanning 41 sqm, this room embraces the seascape with elegant interiors, a king-size bed, and a private balcony over the ocean — a peaceful retreat for couples.</p>
+
+              <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+            </div>
+          </article>
+
+          <article class="p-villa-slide" data-villa-slide aria-hidden="true">
+            <!-- Content: TSH_Hotel_Information_Presentation.md, "Garden Hill Pool Villa" section. -->
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/garden-hill-pool-villa-big-image.jpg"
+                   alt="Garden Hill Pool Villa exterior set in the hillside landscape" width="1081" height="1100" loading="lazy" decoding="async" data-parallax="0.08">
+            </div>
+
+            <div class="p-villa-slide__detail">
+              <h3 class="p-villa-slide__title">Garden Hill Pool Villa</h3>
+
+              <div class="p-villa-slide__inset-media">
+                <img class="p-villa-slide__inset" src="assets/images/garden-hill-pool-villa-small-image.jpg"
+                     alt="Garden Hill Pool Villa interior with private pool overlooking rolling hills" width="519" height="540" loading="lazy" decoding="async" data-parallax="0.14">
+              </div>
+
+              <ul class="p-villa-meta">
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                  <span class="p-villa-meta__label">4 Units</span>
+                </li>
+                <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                <li class="p-villa-meta__item">
+                  <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                  <span class="p-villa-meta__label">47 SQM</span>
+                </li>
+              </ul>
+
+              <p class="p-villa-slide__description">Set in Nusa Penida's hillside landscape, this 47 sqm villa offers a spacious bedroom, living area, and private pool overlooking rolling hills — a quiet sanctuary.</p>
+
+              <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
+
     <section class="p-facilities" id="facilities" aria-labelledby="facilities-heading">
       <div class="c-section-header p-facilities__header">
         <p class="c-section-header__eyebrow">Facilities</p>
@@ -204,7 +232,9 @@
 
       <div class="p-highlights-row">
         <article class="c-highlight-block">
-          <img class="c-highlight-block__thumbnail" src="assets/images/highlight-infinity-pool.png" alt="Infinity pool overlooking the ocean at sunset" width="513" height="560" loading="lazy" />
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-infinity-pool.png" alt="Infinity pool overlooking the ocean at sunset" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
           <div class="c-highlight-block__text">
             <h3 class="c-highlight-block__title">Infinity Pool</h3>
             <p class="c-highlight-block__description">A architectural marvel hovering over Penida&rsquo;s sunset crest.</p>
@@ -212,7 +242,9 @@
         </article>
 
         <article class="c-highlight-block">
-          <img class="c-highlight-block__thumbnail" src="assets/images/highlight-punna-restaurant.png" alt="Dining room at Puṇṇa Restaurant" width="513" height="560" loading="lazy" />
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-punna-restaurant.png" alt="Dining room at Puṇṇa Restaurant" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
           <div class="c-highlight-block__text">
             <h3 class="c-highlight-block__title">Puṇṇa Restaurant</h3>
             <p class="c-highlight-block__description">Serving exquisite modern Balinese cuisine with local ingredients.</p>
@@ -220,7 +252,9 @@
         </article>
 
         <article class="c-highlight-block">
-          <img class="c-highlight-block__thumbnail" src="assets/images/highlight-radha-spa.png" alt="Treatment room at Radha Spa" width="513" height="560" loading="lazy" />
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-radha-spa.png" alt="Treatment room at Radha Spa" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
           <div class="c-highlight-block__text">
             <h3 class="c-highlight-block__title">Radha Spa</h3>
             <p class="c-highlight-block__description">Tranquil treatment rooms integrating local healing rituals.</p>
@@ -448,17 +482,19 @@
   <svg class="u-visually-hidden" aria-hidden="true">
     <defs>
     <symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332.606-6.064 5.828 1.48 8.279L12 18.897l-7.416 4.971 1.48-8.279L0 8.761l8.332-.606L12 .587z"/></symbol>
+    <!-- lucide: bed (https://lucide.dev/icons/bed) -->
     <symbol id="icon-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M2 4v16" />
-    <path d="M2 8h18a2 2 0 0 1 2 2v10" />
-    <path d="M2 17h20" />
-    <path d="M6 8v9" />
+      <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+      <path d="M2 17h20" />
+      <path d="M6 8v9" />
     </symbol>
+    <!-- lucide: maximize-2 (https://lucide.dev/icons/maximize-2) -->
     <symbol id="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M15 3h6v6" />
-    <path d="m21 3-7 7" />
-    <path d="m3 21 7-7" />
-    <path d="M9 21H3v-6" />
+      <path d="m21 3-7 7" />
+      <path d="m3 21 7-7" />
+      <path d="M9 21H3v-6" />
     </symbol>
     <symbol id="icon-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />
@@ -529,5 +565,6 @@
   </svg>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/home.js"></script>
 </body>
 </html>
