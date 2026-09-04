@@ -129,7 +129,7 @@
 }
 
 .p-villa-slide__inset-media {
-  max-width: clamp(24.328125rem, 27.0313vw, 32.4375rem); /* 389.25 -> 519px */
+  max-width: clamp(24.328125rem, 27.0313vw, 43.25rem); /* 389.25 -> 519 -> 692px */
   overflow: hidden;
 }
 
@@ -170,7 +170,7 @@
 
 /* Figma 4052:405 — 519px block, Switzer Light 18 / 160%. */
 .p-villa-slide__description {
-  max-width: clamp(25.9375rem, 26.9792vw, 32.4375rem); /* 415.5 -> 519px */
+  max-width: clamp(25.9375rem, 26.9792vw, 43.25rem); /* 415.5 -> 519 -> 692px */
   font-family: var(--font-body);
   font-weight: 300;
   font-size: var(--text-sm-size);
@@ -440,14 +440,14 @@
 }
 
 .p-location__intro {
-  flex: 0 1 clamp(30.4375rem, 33.8021vw, 40.5625rem); /* 487 -> 649px */
+  flex: 0 1 clamp(30.4375rem, 33.8021vw, 54.0833rem); /* 487 -> 649 -> 865.3px */
 }
 
 .p-location__landmarks {
   display: flex;
   flex-direction: column;
   gap: var(--space-6); /* 24 */
-  flex: 0 1 clamp(24rem, 26.6667vw, 32rem); /* 384 -> 512px */
+  flex: 0 1 clamp(24rem, 26.6667vw, 42.6667rem); /* 384 -> 512 -> 682.7px */
 }
 
 .p-location__landmarks-label {
@@ -503,7 +503,7 @@
 
 /* Figma: check-in 370 / check-out 370 / guests 180 across a 960px row. */
 .p-reservations__guests {
-  flex: 0 1 clamp(8.4375rem, 9.375vw, 11.25rem); /* 135 -> 180px */
+  flex: 0 1 clamp(8.4375rem, 9.375vw, 15rem); /* 135 -> 180 -> 240px */
 }
 
 .p-reservations__actions {
