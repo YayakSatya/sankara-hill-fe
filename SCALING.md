@@ -1,7 +1,7 @@
 ## Scaling Strategy: Figma → Implementation
 
-**Version:** 3.1
-**Last updated:** 2026-08-28
+**Version:** 3.2
+**Last updated:** 2026-09-04
 **Status:** Reusable standard for any Figma file built on a fixed source frame width
 
 ---
@@ -10,25 +10,25 @@
 
 This rule applies to any project where the Figma canvas is designed at a fixed
 frame width, and the primary implementation target is a different (usually
-smaller) fixed width.
+smaller) fixed width, with support for larger 2K desktop viewports.
 
 ```
-SOURCE_FRAME = 1920   // Figma frame width (px)
-TARGET_FRAME = 1440   // Primary implementation width (px)
+SOURCE_FRAME = 1920   // Figma frame width (px) (1.0x baseline)
+TARGET_FRAME = 1440   // Primary laptop implementation width (px) (0.75x floor)
+MAX_FRAME    = 2560   // 2K desktop ceiling (px) (1.3333x ceiling)
 SCALE_RATIO  = TARGET_FRAME / SOURCE_FRAME   // = 0.75
+RATIO_2K     = MAX_FRAME / SOURCE_FRAME      // = 1.3333
 
 Rounding convention = nearest 0.5px before rem conversion
 FONT_FLOOR_PX   = 15   // change only when project design system defines another minimum
 ```
 
-> **Project decision (2026-09-02): this project uses FLUID mode**, not Fixed
-> mode. See "Fluid mode" below. Reason: reviewing the slice at a 1920px
-> viewport against the 1920px Figma frame showed everything rendering 25%
-> small — expected under Fixed mode, which only matches Figma at
-> `TARGET_FRAME`. Fluid mode matches Figma exactly at 1920px *and* gives the
-> 0.75-scaled value at 1440px. All tokens in `output/assets/css/tokens.css`
-> are therefore `clamp(scaled_min, fluid_vw, figma_exact)`. Do not mix in
-> plain `rem` values computed from `SCALE_RATIO` — pick one mode per project.
+> **Project decision (2026-09-04, v3.2): this project uses EXTENDED FLUID mode (1440px–2560px)**.
+> All tokens in `output/assets/css/tokens.css` are expressed as:
+> `clamp(scaled_min_1440, fluid_vw, max_2k_2560)`.
+> This ensures exact 1:1 match with Figma at 1920px, 0.75-scaled at 1440px,
+> fully proportional scaling up to 2K (2560px) with no awkward lateral empty
+> space, and clean centered capping above 2560px to protect ultrawide displays.
 
 Change `SOURCE_FRAME` / `TARGET_FRAME` per project — every formula below
 derives from `SCALE_RATIO`, so the rest of this document does not need to
@@ -177,58 +177,51 @@ implementation_px = max(figma_px * SCALE_RATIO, FONT_FLOOR_PX)
 - **Below TARGET_FRAME** (e.g. tablet/mobile, <1440px): use fluid `clamp()`
   or dedicated stack breakpoints. Do NOT keep applying `SCALE_RATIO` below
   this point — those breakpoints follow their own spacing/typography rules.
-- **Between TARGET_FRAME and SOURCE_FRAME** (1440px–1920px): see "Fluid
-  mode" below — this range doesn't have to jump between two fixed values;
-  it can interpolate proportionally so 1920px renders exactly like Figma
-  and 1440px renders the scaled value, with no in-between size that looks
-  too big or too small.
-- **Above SOURCE_FRAME** (e.g. ultra-wide monitors, >1920px): cap the layout
-  at a max-width matching the design's largest defined frame, and center or
-  pad the surrounding space. Do not extrapolate the scale ratio beyond the
-  source frame — there's no design reference past that point.
+- **Between TARGET_FRAME and MAX_FRAME** (1440px–2560px): see "Extended Fluid
+  mode" below — this range interpolates linearly so 1440px renders the scaled
+  value, 1920px renders exactly like Figma, and 2560px fills 2K desktop screens
+  proportionally without dead space.
+- **Above MAX_FRAME** (e.g. ultra-wide monitors, >2560px): cap the layout
+  at `--layout-max: 160rem` (2560px) and center it with margin-inline: auto.
+  Do not extrapolate beyond 2560px — ultrawide monitors have extreme width-to-height
+  ratios (21:9) where uncapped vw scaling causes oversized text and excessive vertical scrolling.
 
-### Fluid mode: proportional scaling between TARGET_FRAME and SOURCE_FRAME
+### Fluid mode: proportional scaling between TARGET_FRAME and MAX_FRAME (2K)
 
-**Use this when:** the project needs the screen to look like the exact
-Figma design at `SOURCE_FRAME` (1920px) *and* proportionally scaled at
-`TARGET_FRAME` (1440px) *and* correctly proportioned at every width in
-between — not just two fixed breakpoints. Most relevant for **font-size**,
-since size differences in text are the most visually obvious, but the same
-formula works for any scaled property.
+**Use this when:** the project needs the screen to look proportionally scaled at
+`TARGET_FRAME` (1440px), exact to Figma at `SOURCE_FRAME` (1920px), and
+proportionally scaled up at `MAX_FRAME` (2560px) — eliminating dead space on 2K monitors.
 
-The line connecting `(TARGET_FRAME, scaled_px)` and `(SOURCE_FRAME,
-figma_px)` passes through the origin, so it reduces to one simple `vw`
-term — no offset needed:
+The line connecting `(1440, scaled_px)`, `(1920, figma_px)`, and `(2560, max_2k_px)`
+passes through the origin:
 
 ```
-fluid_vw = figma_px / (SOURCE_FRAME / 100)
+fluid_vw   = figma_px / (SOURCE_FRAME / 100) = figma_px / 19.2
+MAX_2K_rem = (figma_px * 1.3333) / 16 = figma_px / 12
 ```
 
-Combine with the floor (as min) and the exact Figma value (as max) in a
-single `clamp()`:
+Combine with the floor (as min) and the 2K value (as max) in a single `clamp()`:
 
 ```css
-font-size: clamp(FLOOR_rem, fluid_vw, FIGMA_EXACT_rem);
+font-size: clamp(FLOOR_rem, fluid_vw, MAX_2K_rem);
 ```
 
-**Example — body text, figma_px = 20, SOURCE_FRAME = 1920:**
+**Example — body text, figma_px = 20, SOURCE_FRAME = 1920, MAX_FRAME = 2560:**
 
 ```
-fluid_vw = 20 / 19.2 = 1.0417vw
+fluid_vw   = 20 / 19.2 = 1.0417vw
+MAX_2K_rem = (20 * 1.3333) / 16 = 1.6667rem (26.67px)
 ```
 
 ```css
-font-size: clamp(0.9375rem, 1.0417vw, 1.25rem);
-/*                 ^15px floor   ^fluid    ^20px = exact Figma match */
+font-size: clamp(0.9375rem, 1.0417vw, 1.6667rem);
+/*                 ^15px floor   ^fluid    ^26.7px at 2560 (20px at 1920) */
 ```
 
-- At exactly 1920px width → renders 20px, identical to Figma.
-- At exactly 1440px width → renders 15px, identical to the `SCALE_RATIO`
-  result computed earlier in this doc.
-- At any width between → interpolates linearly, so it's never
-  disproportionately large or small relative to the viewport.
-- Below 1440px or above 1920px → `clamp()` locks to the min/max, matching
-  the capping rules above.
+- At 1440px width → renders 15px (0.75x).
+- At 1920px width → renders 20px (exact Figma match).
+- At 2560px width → renders 26.67px (exact 1.3333x 2K match).
+- Above 2560px → `clamp()` locks to max, and `--layout-max: 160rem` centers the container.
 
 **Important — pick one strategy per project, don't mix:**
 - **Fixed mode:** keep root `html { font-size: 100%; }` (or omit the declaration), use plain `rem` values computed from `figma_px * SCALE_RATIO` with a 16px base. Simple, but only exactly matches Figma at `TARGET_FRAME`, not at `SOURCE_FRAME`. Never apply `75%` root sizing together with these rem values.
@@ -275,6 +268,7 @@ icons) rather than every single spacing token in the file.
 
 ### Changelog
 
+- **3.2** (2026-09-04) — Added 2K Desktop Scaling (`MAX_FRAME = 2560`, ratio 1.3333x): extended `clamp()` ceiling from 1920px to 2560px and increased `--layout-max` to 160rem (2560px), eliminating empty space on 2K displays while keeping layouts securely capped on ultrawide (>2560px) monitors.
 - **3.1** (2026-08-28) — Added Fluid mode: `clamp()` + `vw` formula to
   interpolate proportionally between `TARGET_FRAME` and `SOURCE_FRAME`, so
   the design matches Figma exactly at 1920px and stays proportional at
