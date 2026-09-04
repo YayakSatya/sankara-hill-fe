@@ -138,28 +138,6 @@
   aspect-ratio: 519 / 540;
 }
 
-.p-villa-slide__title-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.p-villa-slide__inset-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  overflow: hidden;
-}
-
-.p-villa-slide__content-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--space-7-5);
-  width: 100%;
-}
-
 .p-villa-slide__detail {
   display: flex;
   flex-direction: column;
@@ -276,24 +254,18 @@
     flex-direction: row;
     gap: 0; /* Figma cards-row: panels butt together */
     opacity: 0;
-    visibility: hidden;
+    transition: opacity 400ms var(--ease-out);
     pointer-events: none;
-    will-change: opacity, visibility;
   }
 
-  .p-villa-slide.is-active,
-  .p-villa-slide.is-transitioning {
+  .p-villa-slide.is-active {
     opacity: 1;
-    visibility: visible;
     pointer-events: auto;
   }
 
   .p-villa-slide__media {
     flex: 1 1 56.302%; /* 1081 / 1920 */
     min-width: 0;
-    position: relative;
-    overflow: hidden;
-    will-change: clip-path;
   }
 
   .p-villa-slide__image {
@@ -311,13 +283,6 @@
     padding: var(--space-12) var(--space-40);
   }
 
-  .p-villa-slide__content-wrapper {
-    gap: var(--space-6);
-  }
-
-  .p-villa-slide__title-wrapper,
-  .p-villa-slide__inset-wrapper,
-  .p-villa-slide__content-wrapper,
   .p-villa-slide__title,
   .p-villa-slide__inset-media,
   .p-villa-meta,
@@ -334,9 +299,6 @@
     max-width: 100%;
     max-height: 100%;
     aspect-ratio: 519 / 540;
-    overflow: hidden;
-    position: relative;
-    will-change: clip-path;
   }
 
   .p-villa-slide__inset {
@@ -579,11 +541,4 @@
 .p-villa-slide__detail,
 .c-highlight-block {
   overflow: hidden;
-}
-
-/* --- Accommodations reduced motion ------------------------------------- */
-@media (prefers-reduced-motion: reduce) {
-  .p-villa-slide {
-    transition: opacity 200ms var(--ease-out);
-  }
 }

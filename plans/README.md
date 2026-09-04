@@ -14,6 +14,7 @@ rather than improvising.
 | # | Title | Severity | Status |
 | --- | --- | --- | --- |
 | [001](001-smooth-parallax-and-motion-polish.md) | Add smooth image parallax and polish existing scroll motion | MEDIUM | DONE |
+| [002](002-accommodations-motion-polish.md) | Polish accommodations scroll-driven motion | HIGH | DONE |
 
 ## Execution order
 

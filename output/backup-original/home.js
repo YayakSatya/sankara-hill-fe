@@ -57,191 +57,44 @@
   if (slides.length < 2) return;
 
   var desktop = window.matchMedia('(min-width: 1024px)');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var queued = false;
 
-  var slideData = Array.prototype.map.call(slides, function (slide) {
-    return {
-      slide: slide,
-      media: slide.querySelector('.p-villa-slide__media'),
-      title: slide.querySelector('.p-villa-slide__title'),
-      titleWrapper: slide.querySelector('.p-villa-slide__title-wrapper'),
-      insetMedia: slide.querySelector('.p-villa-slide__inset-media'),
-      insetWrapper: slide.querySelector('.p-villa-slide__inset-wrapper'),
-      content: slide.querySelector('.p-villa-slide__content-wrapper')
-    };
-  });
-
-  function hideSlide(item) {
-    item.slide.style.visibility = 'hidden';
-    item.slide.style.opacity = '0';
-    item.slide.style.pointerEvents = 'none';
-    item.slide.style.zIndex = '0';
-    item.slide.classList.remove('is-active', 'is-transitioning');
-    item.slide.setAttribute('aria-hidden', 'true');
-    if (item.media) item.media.style.clipPath = '';
-    if (item.insetMedia) item.insetMedia.style.clipPath = '';
-    if (item.title) {
-      item.title.style.opacity = '';
-      item.title.style.transform = '';
-    }
-    if (item.content) {
-      item.content.style.opacity = '';
-    }
-  }
-
-  function showDwell(activeIdx) {
-    for (var i = 0; i < slideData.length; i++) {
-      var item = slideData[i];
-      if (i === activeIdx) {
-        item.slide.style.visibility = 'visible';
-        item.slide.style.opacity = '1';
-        item.slide.style.pointerEvents = 'auto';
-        item.slide.style.zIndex = '2';
-        item.slide.classList.add('is-active');
-        item.slide.classList.remove('is-transitioning');
-        item.slide.setAttribute('aria-hidden', 'false');
-        if (item.media) item.media.style.clipPath = 'none';
-        if (item.insetMedia) item.insetMedia.style.clipPath = 'none';
-        if (item.title) {
-          item.title.style.opacity = '1';
-          item.title.style.transform = 'translateY(0px)';
-        }
-        if (item.content) {
-          item.content.style.opacity = '1';
-        }
-      } else {
-        hideSlide(item);
-      }
-    }
-  }
-
-  function showTransition(fromIdx, toIdx, t) {
-    for (var i = 0; i < slideData.length; i++) {
-      if (i !== fromIdx && i !== toIdx) {
-        hideSlide(slideData[i]);
-      }
-    }
-
-    var fromItem = slideData[fromIdx];
-    var toItem = slideData[toIdx];
-
-    // Outgoing slide (base layer)
-    fromItem.slide.style.visibility = 'visible';
-    fromItem.slide.style.opacity = '1';
-    if (fromItem.slide.style.zIndex !== '1') fromItem.slide.style.zIndex = '1';
-    fromItem.slide.style.pointerEvents = t < 0.5 ? 'auto' : 'none';
-    fromItem.slide.classList.remove('is-active');
-    fromItem.slide.classList.add('is-transitioning');
-    fromItem.slide.setAttribute('aria-hidden', t < 0.5 ? 'false' : 'true');
-    if (fromItem.media) fromItem.media.style.clipPath = 'none';
-    if (fromItem.insetMedia) fromItem.insetMedia.style.clipPath = 'none';
-
-    // Decoupled typography crossfade:
-    // Outgoing clears during first 35% of transition (1 -> 0, slide up)
-    var pExit = Math.min(1, Math.max(0, t / 0.35));
-    var fromOpacity = (1 - pExit).toFixed(3);
-    var fromY = (-pExit * 14).toFixed(1);
-
-    if (fromItem.title) {
-      fromItem.title.style.opacity = fromOpacity;
-      fromItem.title.style.transform = 'translateY(' + fromY + 'px)';
-    }
-    if (fromItem.content) {
-      fromItem.content.style.opacity = fromOpacity;
-    }
-
-    // Incoming slide (revealing layer on top: bottom-to-top reveal)
-    // Smoothstep curve for cushioned reveal
-    var easeT = t * t * (3 - 2 * t);
-    var topInset = ((1 - easeT) * 100).toFixed(2);
-    var clipVal = 'inset(' + topInset + '% 0px 0px 0px)';
-
-    toItem.slide.style.visibility = 'visible';
-    toItem.slide.style.opacity = '1';
-    if (toItem.slide.style.zIndex !== '2') toItem.slide.style.zIndex = '2';
-    toItem.slide.style.pointerEvents = t >= 0.5 ? 'auto' : 'none';
-    toItem.slide.classList.remove('is-active');
-    toItem.slide.classList.add('is-transitioning');
-    toItem.slide.setAttribute('aria-hidden', t >= 0.5 ? 'false' : 'true');
-    if (toItem.media) toItem.media.style.clipPath = clipVal;
-    if (toItem.insetMedia) toItem.insetMedia.style.clipPath = clipVal;
-
-    // Incoming enters during last 35% of transition (0 -> 1, slide up from +14px to 0)
-    // Middle 30% gap (t: 0.35 -> 0.65) has zero text overlap, focusing eye on the photo wipe
-    var pEntry = Math.min(1, Math.max(0, (t - 0.65) / 0.35));
-    var toOpacity = pEntry.toFixed(3);
-    var toY = ((1 - pEntry) * 14).toFixed(1);
-
-    if (toItem.title) {
-      toItem.title.style.opacity = toOpacity;
-      toItem.title.style.transform = 'translateY(' + toY + 'px)';
-    }
-    if (toItem.content) {
-      toItem.content.style.opacity = toOpacity;
-    }
-  }
-
-  function resetMobile() {
-    for (var i = 0; i < slideData.length; i++) {
-      var item = slideData[i];
-      item.slide.style.visibility = '';
-      item.slide.style.opacity = '';
-      item.slide.style.pointerEvents = '';
-      item.slide.style.zIndex = '';
-      item.slide.classList.remove('is-active', 'is-transitioning');
-      item.slide.removeAttribute('aria-hidden');
-      if (item.media) item.media.style.clipPath = '';
-      if (item.insetMedia) item.insetMedia.style.clipPath = '';
-      if (item.title) {
-        item.title.style.opacity = '';
-        item.title.style.transform = '';
-      }
-      if (item.content) {
-        item.content.style.opacity = '';
-      }
-    }
+  // Cross-fade: only the active index is opaque. The fade duration lives in
+  // CSS so the two never disagree.
+  function setActive(index) {
+    Array.prototype.forEach.call(slides, function (slide, i) {
+      slide.classList.toggle('is-active', i === index);
+      slide.setAttribute('aria-hidden', String(i !== index));
+    });
   }
 
   function update() {
     queued = false;
 
     if (!desktop.matches) {
-      resetMobile();
+      // Stacked layout — every villa visible, no aria-hidden.
+      Array.prototype.forEach.call(slides, function (slide) {
+        slide.classList.remove('is-active');
+        slide.removeAttribute('aria-hidden');
+      });
       return;
     }
 
     var rect = pin.getBoundingClientRect();
+    // The cards row is sticky; the header above it scrolls away first, so
+    // the swap window starts only once the row reaches the top. Use the
+    // header's rendered height directly — row.offsetTop is unreliable on a
+    // position:sticky element (some browsers report its stuck offset, which
+    // grows as the page scrolls, instead of its static flow position).
     var offset = header ? header.offsetHeight : 0;
+    // Scrollable distance while the cards row stays stuck.
     var travel = rect.height - window.innerHeight - offset;
     var progress = travel > 0 ? (-rect.top - offset) / travel : 0;
-    progress = Math.min(Math.max(progress, 0), 1);
+    progress = Math.min(Math.max(progress, 0), 0.9999);
 
-    if (reduced.matches) {
-      var step = Math.min(Math.floor(progress * slideData.length), slideData.length - 1);
-      showDwell(step);
-      return;
-    }
-
-    // 3 Slides timeline:
-    // [0.00, 0.20) -> Slide 0 dwell
-    // [0.20, 0.45) -> Transition 0 -> 1
-    // [0.45, 0.70) -> Slide 1 dwell
-    // [0.70, 0.95) -> Transition 1 -> 2
-    // [0.95, 1.00] -> Slide 2 dwell
-    if (progress < 0.20) {
-      showDwell(0);
-    } else if (progress < 0.45) {
-      var t01 = (progress - 0.20) / 0.25;
-      showTransition(0, 1, t01);
-    } else if (progress < 0.70) {
-      showDwell(1);
-    } else if (progress < 0.95) {
-      var t12 = (progress - 0.70) / 0.25;
-      showTransition(1, 2, t12);
-    } else {
-      showDwell(2);
-    }
+    // Equal dwell per villa: progress 0..1 splits into `slides.length` even
+    // zones, each showing one villa.
+    setActive(Math.floor(progress * slides.length));
   }
 
   function schedule() {
@@ -253,7 +106,6 @@
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   desktop.addEventListener('change', schedule);
-  reduced.addEventListener('change', schedule);
   update();
 })();
 
@@ -298,14 +150,6 @@
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-
-      // Skip elements whose parent villa slide is currently hidden
-      var slideParent = item.el.closest ? item.el.closest('[data-villa-slide]') : null;
-      if (slideParent && slideParent.getAttribute('aria-hidden') === 'true') {
-        item.target = 0;
-        continue;
-      }
-
       var rect = item.el.getBoundingClientRect();
 
       // Skip anything with no box (display:none at this breakpoint, or a
