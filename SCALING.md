@@ -1,8 +1,8 @@
 ## Scaling Strategy: Figma → Implementation
 
-**Version:** 3.2  
+**Version:** 3.3  
 **Last updated:** 2026-09-04  
-**Status:** Reusable standard for any Figma canvas built on a fixed frame width
+**Status:** Reusable standard for any Figma canvas built on a fixed frame width (Desktop Fluid + Responsive Tiers)
 
 ---
 
@@ -117,7 +117,51 @@ Always calculate child column `flex-basis` or `max-width` using the full 3-point
 
 ---
 
-### 5. Negative Values in `clamp()`
+### 5. The Responsive Flex Reset Rule (Column Transitions)
+
+> [!WARNING]
+> **Crucial Responsive Bug Prevention:**  
+> When switching a flex container from `flex-direction: row` to `flex-direction: column` at responsive breakpoints (`<= 1024px` or `<= 768px`), all fluid flex child sizing **MUST BE RESET**.
+
+#### Why unreset flex causes severe visual defects:
+1. **0px Height Collapse (Disappearing Cards):**  
+   If a child has `flex: 1 1 0` or `flex-basis: 0` in horizontal layout, switching to vertical column turns the main axis to vertical. With no explicit parent height, `flex-basis: 0` calculates item height as **0px**, causing components (e.g. facility/highlight cards) to completely vanish.
+2. **Giant Vertical Ghost Gaps:**  
+   If a child has `flex: 0 1 clamp(17.67rem, ...)`, switching to vertical column causes the browser to treat that clamp value as the **minimum vertical height reservation**, generating massive unwanted blank gaps between stacked columns (e.g. footer sections).
+
+#### Standard Fix:
+Always reset child sizing when stacking to column in media queries:
+```css
+@media (max-width: 1024px) {
+  .p-highlights-row > *,
+  .c-footer__col,
+  .c-location__content {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+```
+
+---
+
+### 6. Responsive Breakpoint Architecture (< 1024px & < 768px)
+
+Desktop fluid scaling (`clamp()` with `1440px` floor) applies to screens `>= 1025px`. For tablet and mobile, viewport widths drop far below `TARGET_FRAME = 1440px`. Fixed breakpoint overrides must enforce usability:
+
+#### 1. Tablet Tier (`@media (max-width: 1024px)`):
+- **Section Lateral Padding:** Lock to `var(--space-8)` (32px) or `var(--space-12) var(--space-8)` to prevent large fluid desktop padding (e.g. 90px) from crushing content width.
+- **Navigation:** Transition desktop link row to collapsed hamburger overlay menu.
+- **2-Column Layouts:** Transition complex multi-column side-by-side rows (e.g. Location map + text, 3-card highlights) to vertical stack.
+
+#### 2. Mobile Tier (`@media (max-width: 768px)`):
+- **Section Lateral Padding:** Lock to `var(--space-4)` (16px) or `var(--space-8) var(--space-4)`.
+- **Form Rows:** Form fields (`.c-field-row`) must stack vertically with `flex-direction: column` and `width: 100%`.
+- **Embedded Media & Maps:** Provide explicit `aspect-ratio: 4 / 3` (or `16 / 9`) and a safety floor `min-height: 280px` to prevent layout collapse.
+
+---
+
+### 7. Negative Values in `clamp()`
 
 In CSS, `clamp(MIN, VAL, MAX)` strictly requires that `MIN <= MAX`.
 
@@ -136,7 +180,7 @@ bottom: clamp(-0.3333rem, -0.2083vw, -0.1875rem);
 
 ---
 
-### 6. Font-Size Floor & Exceptions
+### 8. Font-Size Floor, Display Typography & Exceptions
 
 #### Font-Size Floor (`FONT_FLOOR_PX = 15px`)
 Text below 15px strains readability regardless of scale ratios.
@@ -151,6 +195,19 @@ Text below 15px strains readability regardless of scale ratios.
   font-size: clamp(0.9375rem, 0.9375vw, 1.5rem);
   ```
 
+#### Display & Heading Clamp for Mobile Screens
+The standard 1440px desktop floor for large display headings (H1, H2, quote titles) often results in sizes between `3rem` (48px) and `3.75rem` (60px). On 375px mobile viewports, this causes single words to overflow or wrap awkwardly.
+- Large editorial headings must include mobile-tailored clamp overrides:
+  ```css
+  /* Mobile / Tablet override */
+  @media (max-width: 768px) {
+    .p-hero__quote,
+    .c-section-title {
+      font-size: clamp(1.85rem, 7vw, 2.6rem);
+    }
+  }
+  ```
+
 #### Exceptions (Do NOT Scale):
 - **Border-width:** Keep `1px` for hairlines (`--border-hairline: 1px`).
 - **Box-shadow:** Blur and spread stay constant unless explicitly specified.
@@ -160,7 +217,7 @@ Text below 15px strains readability regardless of scale ratios.
 
 ---
 
-### 7. Root Font-Size & Accessibility
+### 9. Root Font-Size & Accessibility
 
 - Always declare `html { font-size: 100%; }` (or omit declaration).
 - **NEVER** set `html { font-size: 75%; }` when using rem values calculated from a 16px base — that would compound the scale ratio twice.
@@ -168,7 +225,7 @@ Text below 15px strains readability regardless of scale ratios.
 
 ---
 
-### 8. Container Sizing Architecture
+### 10. Container Sizing Architecture
 
 ```css
 /* 1. Global Shell Container (centers and safe-caps on ultrawide) */
@@ -187,7 +244,7 @@ Text below 15px strains readability regardless of scale ratios.
 
 ---
 
-### 9. Developer / AI Agent Step-by-Step Workflow
+### 11. Developer / AI Agent Step-by-Step Workflow
 
 When translating any dimension from Figma inspect mode:
 
@@ -200,11 +257,12 @@ When translating any dimension from Figma inspect mode:
    - Calculate `MAX_rem` $= (\text{figma\_px} \times 1.3333) / 16\text{rem} = (\text{figma\_px} / 12)\text{rem}$.
    - Write: `clamp(MIN_rem, fluid_vw, MAX_rem)`.
 4. **If styling columns inside a flex container:**
-   - Ensure the column's `flex-basis` or `max-width` uses the 2K ceiling `MAX_rem` to prevent pinching.
+   - Ensure column's `flex-basis` or `max-width` uses 2K ceiling `MAX_rem` to prevent pinching.
+   - For responsive breakpoints (`<= 1024px`), apply **The Responsive Flex Reset Rule** (`flex: 0 0 auto; width: 100%;`).
 
 ---
 
-### 10. Verification Checklist
+### 12. Verification Checklist
 
 Before finalizing any PR or feature:
 
@@ -212,15 +270,21 @@ Before finalizing any PR or feature:
 - [ ] Root `html { font-size: 100%; }` remains unchanged.
 - [ ] Container `--layout-max` is set to `160rem` (2560px) and centers with `margin-inline: auto`.
 - [ ] No flex child column inside `--layout-content-max` has a max-width hardcoded to 1920px.
+- [ ] Multi-column flex children transitioning to `column` at responsive breakpoints apply `flex: 0 0 auto; width: 100%`.
 - [ ] Negative `clamp()` values satisfy `MIN <= MAX` (e.g. `clamp(-0.33rem, ..., -0.18rem)`).
 - [ ] Border-width (`1px`) and unitless line-heights are unscaled.
-- [ ] Typography checked against `FONT_FLOOR_PX` (15px minimum floor).
-- [ ] Verified at **1440px**, **1920px**, and **2560px** viewports without horizontal scrollbar.
+- [ ] Typography checked against `FONT_FLOOR_PX` (15px minimum floor) and mobile heading clamps applied.
+- [ ] Verified at **375px** (Mobile), **768px** (Tablet portrait), **1024px** (Tablet landscape), **1440px** (Compact laptop), **1920px** (Desktop baseline), and **2560px** (2K ceiling) viewports without horizontal scrollbar or element collapse.
 
 ---
 
-### 11. Changelog
+### 13. Changelog
 
+- **3.3** (2026-09-04) — **Responsive Breakpoint Architecture & Flex Reset Standard:**
+  - Added **Section 5 (The Responsive Flex Reset Rule)** preventing 0px height collapse (`flex-basis: 0`) and giant ghost gaps (`flex-basis: clamp(...)`) when stacking flex rows into columns.
+  - Added **Section 6 (Responsive Breakpoint Architecture)** defining `< 1024px` (Tablet tier: 32px lateral padding, hamburger nav, vertical stack) and `< 768px` (Mobile tier: 16px lateral padding, vertical form controls, map aspect ratio).
+  - Added mobile display typography clamp standard to prevent heading overflow on narrow viewports.
+  - Expanded Section 12 Verification Checklist to cover 375px, 768px, and 1024px viewports.
 - **3.2** (2026-09-04) — **Extended 3-Point Fluid Standard (1440px → 1920px → 2560px):**
   - Added `MAX_FRAME = 2560` (1.3333x ceiling) to eliminate dead lateral space on 2K monitors.
   - Added **Flex Child Sizing Rule** to prevent column pinching and excessive whitespace in multi-column flex containers.

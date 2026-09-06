@@ -21,7 +21,7 @@
   font-style: normal;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: background-color var(--transition-base);
+  transition: background-color var(--transition-base), transform 120ms var(--ease-out);
 }
 
 .c-btn--navbar {
@@ -35,6 +35,16 @@
 .c-btn:focus-visible {
   /* assumption: standard hover state, not shown in design */
   background-color: var(--color-action-strong);
+}
+
+.c-btn:active {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-btn:active {
+    transform: none;
+  }
 }
 
 /* --- c-navbar --------------------------------------------------------- */
@@ -113,16 +123,16 @@
   font-weight: 300; /* Figma: fontStyle "Light" on this node */
   line-height: var(--leading-body);
   color: var(--color-text);
+  transition: color var(--transition-base);
 }
 
 .c-navbar__link:hover,
+.c-navbar__link:focus-visible,
 .c-navbar__link[aria-current="page"] {
   color: var(--color-action);
 }
 
-.c-navbar__link[aria-current="page"]::after {
-  /* assumption: active-state underline, not present as a variant in the
-     scanned frame — standard convention for the current nav item */
+.c-navbar__link::after {
   content: "";
   position: absolute;
   left: 0;
@@ -130,6 +140,27 @@
   bottom: clamp(-0.3333rem, -0.2083vw, -0.1875rem); /* -5.3px -> -4px -> -3px */
   height: var(--border-hairline);
   background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .c-navbar__link:hover::after,
+  .c-navbar__link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.c-navbar__link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-navbar__link::after {
+    transition: none;
+  }
 }
 
 /* Wrapper exists only so the links + actions can collapse into one mobile
@@ -221,7 +252,9 @@
 
 /* --- Responsive: below `md`, design has no source frame — assumption:
    collapse links + actions into a slide-down panel behind a toggle. -- */
-@media (max-width: 768px) {
+/* --- Responsive: below `lg` (1024px), collapse links + actions into
+   a slide-down panel behind a toggle to prevent tablet overlap. -- */
+@media (max-width: 1024px) {
   .c-navbar {
     padding-inline: var(--space-6);
   }
@@ -241,13 +274,21 @@
     top: 100%;
     left: 0;
     right: 0;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-6);
     padding: var(--space-6);
     background-color: var(--color-surface);
     border-bottom: var(--border-hairline) solid var(--color-border);
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 240ms var(--ease-out),
+      transform 240ms var(--ease-out),
+      visibility 240ms var(--ease-out);
   }
 
   .c-navbar__links {
@@ -257,7 +298,185 @@
   }
 
   .c-navbar[data-nav-open="true"] .c-navbar__panel {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .c-navbar__panel {
+      transform: none;
+      transition:
+        opacity 160ms var(--ease-out),
+        visibility 160ms var(--ease-out);
+    }
+  }
+}
+
+/* --- Desktop navbar: transparent overlay at top, crisp white on scroll --- */
+@media (min-width: 1025px) {
+  .c-navbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      box-shadow var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  /* Scrim gradient to ensure maximum text legibility across all hero imagery */
+  .c-navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(8, 26, 28, 0.65) 0%, rgba(8, 26, 28, 0.25) 60%, transparent 100%);
+    opacity: 1;
+    transition: opacity var(--transition-base);
+  }
+
+  /* Transparent initial state at top of page */
+  .c-navbar:not(.is-scrolled) {
+    background-color: transparent;
+    border-bottom: var(--border-hairline) solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Scrolled state: solid white glass background with soft elevation */
+  .c-navbar.is-scrolled {
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: var(--border-hairline) solid var(--color-border);
+    box-shadow: 0 4px 20px -2px rgba(2, 6, 23, 0.06);
+  }
+
+  .c-navbar.is-scrolled::before {
+    opacity: 0;
+  }
+
+  /* Brand / Logo: white in transparent state, dark text on scrolled */
+  .c-navbar__brand {
+    transition: color var(--transition-base), text-shadow var(--transition-base);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__brand {
+    color: var(--color-neutral-0);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  .c-navbar.is-scrolled .c-navbar__brand {
+    color: var(--color-text);
+    text-shadow: none;
+  }
+
+  /* Nav Links: light white in transparent state, dark on scrolled */
+  .c-navbar__link {
+    transition: color var(--transition-base), text-shadow var(--transition-base);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__link {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__link:hover,
+  .c-navbar:not(.is-scrolled) .c-navbar__link:focus-visible,
+  .c-navbar:not(.is-scrolled) .c-navbar__link[aria-current="page"] {
+    color: var(--color-neutral-0);
+  }
+
+  .c-navbar.is-scrolled .c-navbar__link {
+    color: var(--color-text);
+    text-shadow: none;
+  }
+
+  .c-navbar.is-scrolled .c-navbar__link:hover,
+  .c-navbar.is-scrolled .c-navbar__link:focus-visible,
+  .c-navbar.is-scrolled .c-navbar__link[aria-current="page"] {
+    color: var(--color-action);
+  }
+
+  /* Language Switcher: white contrast in transparent state, dark on scrolled */
+  .c-navbar__lang-option {
+    transition: color var(--transition-base), text-shadow var(--transition-base);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__lang-option {
+    color: rgba(255, 255, 255, 0.65);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__lang-option:hover {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__lang-option[aria-current="true"] {
+    color: var(--color-neutral-0);
+    font-weight: 500;
+  }
+
+  .c-navbar:not(.is-scrolled) .c-navbar__lang-divider {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .c-navbar.is-scrolled .c-navbar__lang-option {
+    color: var(--color-text-subtle);
+    text-shadow: none;
+  }
+
+  .c-navbar.is-scrolled .c-navbar__lang-option:hover {
+    color: var(--color-text);
+  }
+
+  .c-navbar.is-scrolled .c-navbar__lang-option[aria-current="true"] {
+    color: var(--color-text);
+  }
+
+  .c-navbar.is-scrolled .c-navbar__lang-divider {
+    background-color: var(--color-border);
+  }
+
+  /* CTA Button: high-contrast white button in transparent state, dark teal on scrolled */
+  .c-navbar .c-btn--navbar {
+    transition:
+      background-color var(--transition-base),
+      color var(--transition-base),
+      border-color var(--transition-base),
+      box-shadow var(--transition-base),
+      transform 120ms var(--ease-out);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-btn--navbar {
+    background-color: var(--color-neutral-0);
+    color: var(--color-teal-950);
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .c-navbar:not(.is-scrolled) .c-btn--navbar:hover,
+  .c-navbar:not(.is-scrolled) .c-btn--navbar:focus-visible {
+    background-color: var(--color-teal-50);
+    color: var(--color-teal-950);
+    border-color: var(--color-neutral-0);
+  }
+
+  .c-navbar.is-scrolled .c-btn--navbar {
+    background-color: var(--color-action);
+    color: var(--color-text-inverse);
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .c-navbar.is-scrolled .c-btn--navbar:hover,
+  .c-navbar.is-scrolled .c-btn--navbar:focus-visible {
+    background-color: var(--color-action-strong);
+    color: var(--color-text-inverse);
   }
 }
 
@@ -303,7 +522,7 @@
 .c-fact-item__label {
   font-family: var(--font-body);
   font-size: var(--text-sm-size);
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted); /* WCAG AA: 7.6:1 contrast against surface-alt */
   text-transform: uppercase;
 }
 
@@ -513,6 +732,12 @@
   border-radius: var(--radius-card);
 }
 
+@media (max-width: 1024px) {
+  .c-highlight-block__media {
+    height: clamp(16rem, 45vw, 24rem);
+  }
+}
+
 .c-highlight-block__thumbnail {
   display: block;
   width: 100%;
@@ -579,6 +804,12 @@
   gap: var(--space-7-5); /* 30 */
   padding-block: var(--space-4); /* 16 */
   border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .c-landmark-item {
+    gap: var(--space-3);
+  }
 }
 
 .c-landmark-item:first-child {
@@ -653,8 +884,9 @@
 
 .c-field__control:focus-visible {
   border-color: var(--color-action);
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-teal-100);
+  outline: 2px solid var(--color-action);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 2px rgba(21, 56, 60, 0.15);
 }
 
 /* :user-invalid only fires after the user interacts with the field (blur
@@ -665,6 +897,19 @@
    submission either way. */
 .c-field__control:user-invalid {
   border-color: var(--color-error-500);
+}
+
+.c-field__error {
+  display: none;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-error-500);
+  line-height: var(--leading-tight);
+}
+
+.c-field:has(.c-field__control:user-invalid) .c-field__error,
+.c-field.has-error .c-field__error {
+  display: block;
 }
 
 /* Trailing-icon controls (select, date). Chevron/calendar are drawn as a
@@ -705,6 +950,12 @@
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .c-field-row {
+    flex-direction: column;
+  }
+}
+
 .c-btn--card {
   width: 100%;
   height: var(--size-btn-card-h);
@@ -733,6 +984,13 @@
   border: 0;
   border-radius: var(--radius-card);
   background-color: var(--color-surface-alt);
+}
+
+@media (max-width: 768px) {
+  .c-map {
+    aspect-ratio: 4 / 3;
+    min-height: 280px;
+  }
 }
 
 /* --- c-footer -------------------------------------------------------------
@@ -906,8 +1164,16 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-full);
-  background-color: var(--color-teal-700);
+  border: var(--border-hairline) solid var(--color-teal-700);
+  background-color: transparent;
   color: var(--color-text-inverse);
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.c-footer__social-link:hover,
+.c-footer__social-link:focus-visible {
+  background-color: var(--color-teal-700);
+  border-color: var(--color-teal-100);
 }
 
 .c-footer__social-icon {
@@ -916,9 +1182,10 @@
   object-fit: contain;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .c-footer {
-    padding: var(--space-16) var(--space-6) var(--space-6);
+    padding: var(--space-12) var(--space-6) var(--space-8);
+    gap: var(--space-8);
   }
 
   .c-footer__content,
@@ -928,8 +1195,26 @@
   }
 
   .c-footer__content {
+    width: 100%;
+    gap: var(--space-8);
+  }
+
+  .c-footer__brand,
+  .c-footer__contacts,
+  .c-footer__explore {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .c-footer__bottom {
+    gap: var(--space-4);
+    padding-top: var(--space-6);
+  }
+
+  .c-footer__legal-links {
     flex-wrap: wrap;
-    gap: var(--space-12);
+    gap: var(--space-4);
   }
 }
 

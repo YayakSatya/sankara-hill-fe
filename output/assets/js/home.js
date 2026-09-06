@@ -19,6 +19,14 @@
     function update() {
       queued = false;
       var y = window.scrollY;
+
+      // Transparent at top, solid white when scrolled
+      if (y > 20) {
+        navbar.classList.add('is-scrolled');
+      } else {
+        navbar.classList.remove('is-scrolled');
+      }
+
       if (pin && desktop.matches) {
         // While the accommodations pin spans the viewport the villa swap
         // animation is running — keep the navbar hidden in BOTH scroll
@@ -30,9 +38,8 @@
           return;
         }
       }
-      // Ignore sub-pixel jitter; hide only after leaving the very top.
-      if (y < lastY - 4 || y < 80) navbar.classList.remove('is-hidden');
-      else if (y > lastY + 4) navbar.classList.add('is-hidden');
+
+      navbar.classList.remove('is-hidden');
       lastY = y;
     }
 
@@ -43,6 +50,10 @@
     }
 
     window.addEventListener('scroll', schedule, { passive: true });
+    if (window.lenis) {
+      window.lenis.on('scroll', update);
+    }
+    update();
   }
 })();
 
@@ -68,9 +79,36 @@
       titleWrapper: slide.querySelector('.p-villa-slide__title-wrapper'),
       insetMedia: slide.querySelector('.p-villa-slide__inset-media'),
       insetWrapper: slide.querySelector('.p-villa-slide__inset-wrapper'),
-      content: slide.querySelector('.p-villa-slide__content-wrapper')
+      content: slide.querySelector('.p-villa-slide__content-wrapper'),
+      meta: slide.querySelector('.p-villa-meta'),
+      desc: slide.querySelector('.p-villa-slide__description'),
+      link: slide.querySelector('.p-villa-slide__link'),
+      lines: []
     };
   });
+
+  window.__tshRefreshVillaLines = function () {
+    for (var i = 0; i < slideData.length; i++) {
+      slideData[i].lines = Array.prototype.slice.call(slideData[i].slide.querySelectorAll('.c-split-line'));
+    }
+  };
+
+  // =========================================================================
+  // Text Transition Modes:
+  // 'option2' = Pure Masking / Curtain (pure clip-path + translateY, NO opacity fade on text lines)
+  // 'option1' = Clean & Editorial (clip-path bottom-to-top reveal + quick fade on enter, pure fade/translateY on exit)
+  // =========================================================================
+  var TEXT_TRANSITION_MODE = 'option2';
+  document.documentElement.setAttribute('data-split-mode', TEXT_TRANSITION_MODE);
+
+  window.__tshSetTextAnimationMode = function (mode) {
+    if (mode === 'option1' || mode === 'option2') {
+      TEXT_TRANSITION_MODE = mode;
+      document.documentElement.setAttribute('data-split-mode', mode);
+      schedule();
+      console.log('[TSH] Text animation mode switched to:', mode);
+    }
+  };
 
   function hideSlide(item) {
     item.slide.style.visibility = 'hidden';
@@ -82,11 +120,26 @@
     if (item.media) item.media.style.clipPath = '';
     if (item.insetMedia) item.insetMedia.style.clipPath = '';
     if (item.title) {
-      item.title.style.opacity = '';
+      item.title.style.visibility = 'hidden';
+      item.title.style.opacity = '0';
       item.title.style.transform = '';
     }
     if (item.content) {
-      item.content.style.opacity = '';
+      item.content.style.visibility = 'hidden';
+      item.content.style.opacity = '0';
+    }
+    if (item.meta) {
+      item.meta.style.opacity = '0';
+      item.meta.style.transform = '';
+    }
+    if (item.link) {
+      item.link.style.opacity = '0';
+      item.link.style.transform = '';
+    }
+    for (var l = 0; l < item.lines.length; l++) {
+      item.lines[l].style.clipPath = 'inset(100% 0px 0px 0px)';
+      item.lines[l].style.transform = 'translateY(105%)';
+      item.lines[l].style.opacity = '0';
     }
   }
 
@@ -104,11 +157,26 @@
         if (item.media) item.media.style.clipPath = 'none';
         if (item.insetMedia) item.insetMedia.style.clipPath = 'none';
         if (item.title) {
+          item.title.style.visibility = 'visible';
           item.title.style.opacity = '1';
           item.title.style.transform = 'translateY(0px)';
         }
         if (item.content) {
+          item.content.style.visibility = 'visible';
           item.content.style.opacity = '1';
+        }
+        if (item.meta) {
+          item.meta.style.opacity = '1';
+          item.meta.style.transform = 'translateY(0px)';
+        }
+        if (item.link) {
+          item.link.style.opacity = '1';
+          item.link.style.transform = 'translateY(0px)';
+        }
+        for (var al = 0; al < item.lines.length; al++) {
+          item.lines[al].style.clipPath = 'inset(0% 0px 0px 0px)';
+          item.lines[al].style.transform = 'translateY(0%)';
+          item.lines[al].style.opacity = '1';
         }
       } else {
         hideSlide(item);
@@ -137,22 +205,7 @@
     if (fromItem.media) fromItem.media.style.clipPath = 'none';
     if (fromItem.insetMedia) fromItem.insetMedia.style.clipPath = 'none';
 
-    // Decoupled typography crossfade:
-    // Outgoing clears during first 35% of transition (1 -> 0, slide up)
-    var pExit = Math.min(1, Math.max(0, t / 0.35));
-    var fromOpacity = (1 - pExit).toFixed(3);
-    var fromY = (-pExit * 14).toFixed(1);
-
-    if (fromItem.title) {
-      fromItem.title.style.opacity = fromOpacity;
-      fromItem.title.style.transform = 'translateY(' + fromY + 'px)';
-    }
-    if (fromItem.content) {
-      fromItem.content.style.opacity = fromOpacity;
-    }
-
-    // Incoming slide (revealing layer on top: bottom-to-top reveal)
-    // Smoothstep curve for cushioned reveal
+    // Incoming slide visual layer (photos clip wipe across t: 0 -> 1)
     var easeT = t * t * (3 - 2 * t);
     var topInset = ((1 - easeT) * 100).toFixed(2);
     var clipVal = 'inset(' + topInset + '% 0px 0px 0px)';
@@ -167,18 +220,125 @@
     if (toItem.media) toItem.media.style.clipPath = clipVal;
     if (toItem.insetMedia) toItem.insetMedia.style.clipPath = clipVal;
 
-    // Incoming enters during last 35% of transition (0 -> 1, slide up from +14px to 0)
-    // Middle 30% gap (t: 0.35 -> 0.65) has zero text overlap, focusing eye on the photo wipe
-    var pEntry = Math.min(1, Math.max(0, (t - 0.65) / 0.35));
-    var toOpacity = pEntry.toFixed(3);
-    var toY = ((1 - pEntry) * 14).toFixed(1);
+    // 1. Outgoing typography & meta clears during first 35% of transition (t: 0 -> 0.35)
+    var pExit = Math.min(1, Math.max(0, t / 0.35));
+    if (pExit >= 1) {
+      if (fromItem.title) {
+        fromItem.title.style.visibility = 'hidden';
+        fromItem.title.style.opacity = '0';
+      }
+      if (fromItem.content) {
+        fromItem.content.style.visibility = 'hidden';
+        fromItem.content.style.opacity = '0';
+      }
+      if (fromItem.meta) fromItem.meta.style.opacity = '0';
+      if (fromItem.link) fromItem.link.style.opacity = '0';
+      for (var fl = 0; fl < fromItem.lines.length; fl++) {
+        fromItem.lines[fl].style.clipPath = 'inset(0px 0px 100% 0px)';
+        fromItem.lines[fl].style.opacity = '0';
+      }
+    } else {
+      var fromOpacity = (1 - pExit).toFixed(3);
+      var fromY = (-pExit * 14).toFixed(1);
 
-    if (toItem.title) {
-      toItem.title.style.opacity = toOpacity;
-      toItem.title.style.transform = 'translateY(' + toY + 'px)';
+      if (fromItem.title) {
+        fromItem.title.style.visibility = 'visible';
+        fromItem.title.style.opacity = fromOpacity;
+        fromItem.title.style.transform = 'translateY(0px)';
+      }
+      if (fromItem.content) {
+        fromItem.content.style.visibility = 'visible';
+        fromItem.content.style.opacity = fromOpacity;
+      }
+      if (fromItem.meta) {
+        fromItem.meta.style.opacity = fromOpacity;
+        fromItem.meta.style.transform = 'translateY(' + fromY + 'px)';
+      }
+      if (fromItem.link) {
+        fromItem.link.style.opacity = fromOpacity;
+        fromItem.link.style.transform = 'translateY(' + fromY + 'px)';
+      }
+
+      if (TEXT_TRANSITION_MODE === 'option2') {
+        // [OPTION 2]: Pure Curtain / Masking only (100% opacity, pure clip wipe)
+        var easeExit2 = pExit * pExit * (3 - 2 * pExit);
+        var exitClipBottom2 = (easeExit2 * 100).toFixed(1);
+        var exitLineY2 = (-easeExit2 * 20).toFixed(1);
+        for (var fl2 = 0; fl2 < fromItem.lines.length; fl2++) {
+          fromItem.lines[fl2].style.clipPath = 'inset(0px 0px ' + exitClipBottom2 + '% 0px)';
+          fromItem.lines[fl2].style.transform = 'translateY(' + exitLineY2 + 'px)';
+          fromItem.lines[fl2].style.opacity = '1';
+        }
+      } else {
+        // [OPTION 1]: Clean & Editorial (pure fade-out + slight rise, NO clip slicing on exit)
+        for (var fl1 = 0; fl1 < fromItem.lines.length; fl1++) {
+          fromItem.lines[fl1].style.clipPath = 'none';
+          fromItem.lines[fl1].style.transform = 'translateY(' + fromY + 'px)';
+          fromItem.lines[fl1].style.opacity = fromOpacity;
+        }
+      }
     }
-    if (toItem.content) {
-      toItem.content.style.opacity = toOpacity;
+
+    // 2. Incoming typography & meta enters during last 35% of transition (t: 0.65 -> 1.0)
+    // Middle 30% gap (t: 0.35 -> 0.65) has zero text overlap
+    var pEntry = Math.min(1, Math.max(0, (t - 0.65) / 0.35));
+    if (pEntry <= 0) {
+      if (toItem.title) {
+        toItem.title.style.visibility = 'hidden';
+        toItem.title.style.opacity = '0';
+      }
+      if (toItem.content) {
+        toItem.content.style.visibility = 'hidden';
+        toItem.content.style.opacity = '0';
+      }
+      if (toItem.meta) toItem.meta.style.opacity = '0';
+      if (toItem.link) toItem.link.style.opacity = '0';
+      for (var tl = 0; tl < toItem.lines.length; tl++) {
+        toItem.lines[tl].style.clipPath = 'inset(100% 0px 0px 0px)';
+        toItem.lines[tl].style.transform = 'translateY(105%)';
+        toItem.lines[tl].style.opacity = '0';
+      }
+    } else {
+      var toOpacity = pEntry.toFixed(3);
+      var toY = ((1 - pEntry) * 14).toFixed(1);
+      var easeEntry = pEntry * pEntry * (3 - 2 * pEntry);
+      var entryTopInset = ((1 - easeEntry) * 100).toFixed(1);
+      var entryLineY = ((1 - easeEntry) * 105).toFixed(1);
+
+      if (toItem.title) {
+        toItem.title.style.visibility = 'visible';
+        toItem.title.style.opacity = toOpacity;
+        toItem.title.style.transform = 'translateY(0px)';
+      }
+      if (toItem.content) {
+        toItem.content.style.visibility = 'visible';
+        toItem.content.style.opacity = toOpacity;
+      }
+      if (toItem.meta) {
+        toItem.meta.style.opacity = toOpacity;
+        toItem.meta.style.transform = 'translateY(' + toY + 'px)';
+      }
+      if (toItem.link) {
+        toItem.link.style.opacity = toOpacity;
+        toItem.link.style.transform = 'translateY(' + toY + 'px)';
+      }
+
+      if (TEXT_TRANSITION_MODE === 'option2') {
+        // [OPTION 2]: Pure Curtain / Masking only (100% opacity, pure bottom-to-top clip unmask)
+        for (var tl2 = 0; tl2 < toItem.lines.length; tl2++) {
+          toItem.lines[tl2].style.clipPath = 'inset(' + entryTopInset + '% 0px 0px 0px)';
+          toItem.lines[tl2].style.transform = 'translateY(' + entryLineY + '%)';
+          toItem.lines[tl2].style.opacity = '1';
+        }
+      } else {
+        // [OPTION 1]: Clean & Editorial (clip-path unmask + subtle quick fade-in)
+        var lineFadeIn = Math.min(1, easeEntry / 0.35).toFixed(3);
+        for (var tl1 = 0; tl1 < toItem.lines.length; tl1++) {
+          toItem.lines[tl1].style.clipPath = 'inset(' + entryTopInset + '% 0px 0px 0px)';
+          toItem.lines[tl1].style.transform = 'translateY(' + entryLineY + '%)';
+          toItem.lines[tl1].style.opacity = lineFadeIn;
+        }
+      }
     }
   }
 
@@ -199,6 +359,19 @@
       }
       if (item.content) {
         item.content.style.opacity = '';
+      }
+      if (item.meta) {
+        item.meta.style.opacity = '';
+        item.meta.style.transform = '';
+      }
+      if (item.link) {
+        item.link.style.opacity = '';
+        item.link.style.transform = '';
+      }
+      for (var l = 0; l < item.lines.length; l++) {
+        item.lines[l].style.clipPath = '';
+        item.lines[l].style.transform = '';
+        item.lines[l].style.opacity = '';
       }
     }
   }
@@ -416,3 +589,212 @@
     else enable();
   });
 })();
+
+(function () {
+  'use strict';
+
+  /* ==========================================================================
+     Accommodations Split-Text Simultaneous Line Reveal
+     Dynamically calculates visual line breaks based on rendered layout.
+     Wraps each line in an overflow-hidden mask.
+     Reveals all lines simultaneously bottom-to-top with clip-path & ease-out.
+     Plays once when entering viewport via IntersectionObserver.
+     Desktop only (>=1024px).
+     ========================================================================== */
+
+  var desktop = window.matchMedia('(min-width: 1024px)');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var elements = document.querySelectorAll('.p-villa-slide__title[data-split-reveal], .p-villa-slide__description[data-split-reveal]');
+  if (!elements.length) return;
+
+  function prepareWords(text) {
+    var words = text.trim().replace(/\s+/g, ' ').split(' ');
+    if (words.length > 3) {
+      var last = words.pop();
+      var secondLast = words.pop();
+      words.push(secondLast + '\u00A0' + last);
+    }
+    return words;
+  }
+
+  function revertElement(el) {
+    var orig = el.getAttribute('data-split-orig');
+    if (orig) {
+      el.textContent = orig;
+      el.removeAttribute('aria-label');
+    }
+    el.classList.remove('is-revealed', 'is-recalculating');
+  }
+
+  function updateAll() {
+    if (!desktop.matches) {
+      Array.prototype.forEach.call(elements, revertElement);
+      if (window.__tshRefreshVillaLines) window.__tshRefreshVillaLines();
+      return;
+    }
+
+    var items = [];
+
+    // Phase 1 (Write): inject temporary word spans into all elements
+    Array.prototype.forEach.call(elements, function (el) {
+      var orig = el.getAttribute('data-split-orig');
+      if (!orig) {
+        orig = el.textContent.trim().replace(/\s+/g, ' ');
+        el.setAttribute('data-split-orig', orig);
+      }
+      var words = prepareWords(orig);
+      if (!words.length || (words.length === 1 && words[0] === '')) return;
+
+      el.innerHTML = words.map(function (word) {
+        return '<span class="c-split-word" style="display:inline-block;">' + word + '</span>';
+      }).join(' ');
+
+      items.push({
+        el: el,
+        orig: orig,
+        spans: el.querySelectorAll('.c-split-word'),
+        wasRevealed: el.classList.contains('is-revealed')
+      });
+    });
+
+    // Phase 2 (Read): batch read offsetTop across all elements in one reflow
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var lines = [];
+      var currentLine = [];
+      var currentTop = null;
+
+      for (var j = 0; j < item.spans.length; j++) {
+        var span = item.spans[j];
+        var top = span.offsetTop;
+        if (currentTop === null || Math.abs(top - currentTop) > 4) {
+          if (currentLine.length > 0) {
+            lines.push(currentLine.join(' '));
+          }
+          currentLine = [span.textContent];
+          currentTop = top;
+        } else {
+          currentLine.push(span.textContent);
+        }
+      }
+      if (currentLine.length > 0) {
+        lines.push(currentLine.join(' '));
+      }
+      item.lines = lines;
+    }
+
+    // Phase 3 (Write): build and commit masked lines DOM for all elements
+    for (var k = 0; k < items.length; k++) {
+      var it = items[k];
+      var html = '<span class="c-split-lines" aria-hidden="true">';
+      for (var m = 0; m < it.lines.length; m++) {
+        html += '<span class="c-split-line-mask">' +
+                '<span class="c-split-line">' + it.lines[m] + '</span>' +
+                '</span>';
+      }
+      html += '</span>';
+
+      it.el.innerHTML = html;
+      it.el.setAttribute('aria-label', it.orig);
+
+      if (it.wasRevealed) {
+        it.el.classList.add('is-revealed', 'is-recalculating');
+        void it.el.offsetHeight;
+        it.el.classList.remove('is-recalculating');
+      }
+    }
+
+    // Phase 4: refresh cached line references in villa slider
+    if (window.__tshRefreshVillaLines) {
+      window.__tshRefreshVillaLines();
+    }
+  }
+
+  // Viewport intersection observer: reveals lines once when in view
+  var observer = null;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver(
+      function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1
+      }
+    );
+  }
+
+  function observeAll() {
+    if (!observer) {
+      // Fallback: reveal immediately if IntersectionObserver not supported
+      Array.prototype.forEach.call(elements, function (el) {
+        el.classList.add('is-revealed');
+      });
+      return;
+    }
+
+    Array.prototype.forEach.call(elements, function (el) {
+      if (!el.classList.contains('is-revealed')) {
+        observer.observe(el);
+      }
+    });
+  }
+
+  function init() {
+    if (desktop.matches) {
+      updateAll();
+      observeAll();
+    }
+  }
+
+  // Ensure custom typography is loaded before initial line measuring
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(init);
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  // Responsive recalculation: re-split when desktop viewport width changes
+  var resizeTimeout;
+  var lastWidth = window.innerWidth;
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+      if (desktop.matches) {
+        updateAll();
+        observeAll();
+      } else {
+        Array.prototype.forEach.call(elements, function (el) {
+          revertElement(el);
+        });
+      }
+    }, 120);
+  });
+
+  desktop.addEventListener('change', function () {
+    if (desktop.matches) {
+      updateAll();
+      observeAll();
+    } else {
+      Array.prototype.forEach.call(elements, function (el) {
+        revertElement(el);
+      });
+    }
+  });
+
+  if (reduced.matches) {
+    Array.prototype.forEach.call(elements, function (el) {
+      el.classList.add('is-revealed');
+    });
+  }
+})();
+
