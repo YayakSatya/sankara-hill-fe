@@ -1,0 +1,642 @@
+<!-- assumption: sliced so far — sticky-navbar, hero-section, welcome-section,
+     accommodations-section, facilities-section, location-section,
+     section-reservations, and footer-section. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Sankara Hill — Nusa Penida, Bali</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <!-- Instrument Serif = headings, Switzer = body/UI (per tokens.css) -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f%5B%5D=switzer@300,400,500,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css?v=3" />
+  <link rel="stylesheet" href="assets/css/base.css?v=4" />
+  <link rel="stylesheet" href="assets/css/components.css?v=3" />
+  <link rel="stylesheet" href="assets/css/pages/home.css?v=9" />
+  <link rel="stylesheet" href="assets/css/loader.css?v=5" />
+</head>
+<body class="is-loading">
+  <!-- Fullscreen 3:4 editorial portrait loader: bottom-to-top clip-path reveal -->
+  <div id="loader" class="c-loader" aria-hidden="true">
+    <div class="c-loader__scrim"></div>
+    <div class="c-loader__stage">
+      <div class="c-loader__frame" role="presentation">
+        <div class="c-loader__slide c-loader__slide--1">
+          <img class="c-loader__img" src="assets/images/highlight-punna-restaurant.png" alt="" />
+        </div>
+        <div class="c-loader__slide c-loader__slide--2">
+          <img class="c-loader__img" src="assets/images/highlight-radha-spa.png" alt="" />
+        </div>
+        <div class="c-loader__slide c-loader__slide--3">
+          <img class="c-loader__img" src="assets/images/ocean-hill-pool-villa-big-image.jpg" alt="" />
+        </div>
+        <div class="c-loader__slide c-loader__slide--4">
+          <img class="c-loader__img" src="assets/images/welcome-image.jpg" alt="" />
+        </div>
+        <div class="c-loader__slide c-loader__slide--final" id="loader-hero-slide">
+          <img class="c-loader__img" src="assets/images/hero-bg.jpg" alt="" />
+          <div class="c-loader__slide-overlay"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="c-navbar" data-nav-open="false" id="site-nav">
+    <div class="c-navbar__logo">
+      <span class="c-navbar__brand">The Sankara Hill</span>
+
+    </div>
+
+    <button
+      type="button"
+      class="c-navbar__toggle"
+      aria-expanded="false"
+      aria-controls="site-nav-panel"
+      aria-label="Toggle navigation menu"
+    >
+      <span class="c-navbar__toggle-icon"></span>
+    </button>
+
+    <div class="c-navbar__panel" id="site-nav-panel">
+      <nav class="c-navbar__links" aria-label="Primary">
+        <a class="c-navbar__link" href="#about" aria-current="page">About</a>
+        <a class="c-navbar__link" href="#accommodations">Accommodations</a>
+        <a class="c-navbar__link" href="#facilities">Facilities</a>
+        <a class="c-navbar__link" href="#location">Location</a>
+        <a class="c-navbar__link" href="#contact">Contact</a>
+      </nav>
+
+      <div class="c-navbar__actions">
+        <div class="c-navbar__lang" role="group" aria-label="Language">
+          <button type="button" class="c-navbar__lang-option" aria-current="true">EN</button>
+          <span class="c-navbar__lang-divider" aria-hidden="true"></span>
+          <button type="button" class="c-navbar__lang-option">ID</button>
+        </div>
+        <a class="c-btn c-btn--navbar" href="#reservations">Enquire Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero section — Figma 4087:50 (1920x1080) -->
+  <section class="p-hero" id="hero" aria-labelledby="hero-title">
+    <div class="p-hero__bg">
+      <img
+        class="p-hero__image"
+        src="assets/images/hero-bg.jpg"
+        alt="The Sankara Hill luxury resort aerial view"
+        width="1920"
+        height="1080"
+        fetchpriority="high"
+        data-parallax="0.08"
+      />
+    </div>
+    <div class="p-hero__overlay" aria-hidden="true"></div>
+    <div class="p-hero__content">
+      <h1 id="hero-title" class="p-hero__title">A New Hilltop Retreat in Paradise</h1>
+      <div class="p-hero__body">
+        <p class="p-hero__description">
+          Commanding a prestigious cliffside perch in Nusa Penida, The Sankara Hill offers an unparalleled 5-star island escape, bridging Balinese hospitality with architecture designed for the contemplative traveler.
+        </p>
+        <a class="p-hero__explore" href="#about">EXPLORE MORE</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="p-welcome" id="about" aria-labelledby="welcome-heading">
+      <div class="p-welcome__content">
+        <div class="p-welcome__header">
+          <div class="c-star-rating" role="img" aria-label="5 out of 5 stars">
+            <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+            <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+            <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+            <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+            <svg class="c-star-rating__icon" viewBox="0 0 20 19" aria-hidden="true"><use href="#icon-star"></use></svg>
+          </div>
+          <h2 id="welcome-heading" class="p-welcome__quote">&ldquo;Discover a sanctuary of serenity where modern luxury meets breathtaking ocean views.&rdquo;</h2>
+        </div>
+        <p class="p-welcome__lede">Commanding a prestigious cliffside perch in Nusa Penida, The Sankara Hill offers an unparalleled 5-star island escape, bridging Balinese hospitality with architecture designed for the contemplative traveler.</p>
+      </div>
+
+      <dl class="c-fact-strip">
+        <div class="c-fact-item">
+          <dt class="c-fact-item__label">Accommodations</dt>
+          <dd class="c-fact-item__value">41 Rooms</dd>
+        </div>
+        <div class="c-fact-item">
+          <dt class="c-fact-item__label">Suites</dt>
+          <dd class="c-fact-item__value">16 Suites</dd>
+        </div>
+        <div class="c-fact-item">
+          <dt class="c-fact-item__label">Villas</dt>
+          <dd class="c-fact-item__value">25 Villas</dd>
+        </div>
+      </dl>
+      <div class="p-welcome__media">
+        <img
+          class="p-welcome__image"
+          src="assets/images/welcome-image.jpg"
+          alt="The Sankara Hill resort cliffside view over the ocean"
+          width="1600"
+          height="800"
+          loading="lazy"
+          data-parallax="0.12"
+        />
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         Accommodations — Figma 4052:375 (1920x1628), dark teal band.
+         Vertical section header (eyebrow + title, gap 64), then a full-bleed
+         1081px image panel on the left and an 839px detail column on the
+         right. Desktop (>=1024px) pins the section and scroll progress swaps
+         the active villa; below that it's a plain stacked list.
+         ================================================================== -->
+    <section class="p-accommodations" id="accommodations" aria-labelledby="accommodations-heading">
+      <div class="p-accommodations__pin" data-villa-slider>
+        <header class="c-section-header p-accommodations__header">
+          <p class="c-section-header__eyebrow">Accommodations</p>
+          <h2 class="c-section-header__title" id="accommodations-heading">Designed for Deep Solitude</h2>
+          <p class="c-section-header__lede">41 exclusive spaces curated to offer uninterrupted ocean or garden panoramas, with spacious private footprints.</p>
+        </header>
+
+        <div class="p-cards-row">
+          <article class="p-villa-slide is-active" data-villa-slide aria-hidden="false">
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/ocean-hill-pool-villa-big-image.jpg"
+                   alt="Ocean Hill Pool Villa exterior with its private pool overlooking the sea" width="1081" height="1100" loading="lazy" decoding="async">
+            </div>
+
+            <div class="p-villa-slide__detail">
+              <div class="p-villa-slide__title-wrapper">
+                <h3 class="p-villa-slide__title" data-split-reveal>Ocean Hill Pool Villa</h3>
+              </div>
+
+              <div class="p-villa-slide__inset-wrapper">
+                <div class="p-villa-slide__inset-media">
+                  <img class="p-villa-slide__inset" src="assets/images/ocean-hill-pool-villa-small-image.jpg"
+                       alt="Ocean Hill Pool Villa interior with private pool and ocean view" width="519" height="540" loading="lazy" decoding="async">
+                </div>
+              </div>
+
+              <div class="p-villa-slide__content-wrapper">
+                <ul class="p-villa-meta">
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                    <span class="p-villa-meta__label">21 Units</span>
+                  </li>
+                  <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                    <span class="p-villa-meta__label">51 SQM</span>
+                  </li>
+                </ul>
+
+                <p class="p-villa-slide__description" data-split-reveal>Perched above the ocean, this 51 sqm villa pairs a private pool and spacious living area with contemporary tropical design — an elevated, tranquil island escape.</p>
+
+                <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="p-villa-slide" data-villa-slide aria-hidden="true">
+            <!-- Content: TSH_Hotel_Information_Presentation.md, "Ocean Hill Suite" section. -->
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/ocean-hill-suite-big-image.jpg"
+                   alt="Ocean Hill Suite exterior view" width="1081" height="1100" loading="lazy" decoding="async">
+            </div>
+
+            <div class="p-villa-slide__detail">
+              <div class="p-villa-slide__title-wrapper">
+                <h3 class="p-villa-slide__title" data-split-reveal>Ocean Hill Suite</h3>
+              </div>
+
+              <div class="p-villa-slide__inset-wrapper">
+                <div class="p-villa-slide__inset-media">
+                  <img class="p-villa-slide__inset" src="assets/images/ocean-hill-suite-small-image.jpg"
+                       alt="Ocean Hill Suite interior with king-size bed and private balcony over the ocean" width="519" height="540" loading="lazy" decoding="async">
+                </div>
+              </div>
+
+              <div class="p-villa-slide__content-wrapper">
+                <ul class="p-villa-meta">
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                    <span class="p-villa-meta__label">16 Rooms</span>
+                  </li>
+                  <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                    <span class="p-villa-meta__label">41 SQM</span>
+                  </li>
+                </ul>
+
+                <p class="p-villa-slide__description" data-split-reveal>Spanning 41 sqm, this room embraces the seascape with elegant interiors, a king-size bed, and a private balcony over the ocean — a peaceful retreat for couples.</p>
+
+                <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="p-villa-slide" data-villa-slide aria-hidden="true">
+            <!-- Content: TSH_Hotel_Information_Presentation.md, "Garden Hill Pool Villa" section. -->
+            <div class="p-villa-slide__media">
+              <img class="p-villa-slide__image" src="assets/images/garden-hill-pool-villa-big-image.jpg"
+                   alt="Garden Hill Pool Villa exterior set in the hillside landscape" width="1081" height="1100" loading="lazy" decoding="async">
+            </div>
+
+            <div class="p-villa-slide__detail">
+              <div class="p-villa-slide__title-wrapper">
+                <h3 class="p-villa-slide__title" data-split-reveal>Garden Hill Pool Villa</h3>
+              </div>
+
+              <div class="p-villa-slide__inset-wrapper">
+                <div class="p-villa-slide__inset-media">
+                  <img class="p-villa-slide__inset" src="assets/images/garden-hill-pool-villa-small-image.jpg"
+                       alt="Garden Hill Pool Villa interior with private pool overlooking rolling hills" width="519" height="540" loading="lazy" decoding="async">
+                </div>
+              </div>
+
+              <div class="p-villa-slide__content-wrapper">
+                <ul class="p-villa-meta">
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-bed"></use></svg>
+                    <span class="p-villa-meta__label">4 Units</span>
+                  </li>
+                  <li class="p-villa-meta__divider" aria-hidden="true"></li>
+                  <li class="p-villa-meta__item">
+                    <svg class="p-villa-meta__icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#icon-expand"></use></svg>
+                    <span class="p-villa-meta__label">47 SQM</span>
+                  </li>
+                </ul>
+
+                <p class="p-villa-slide__description" data-split-reveal>Set in Nusa Penida's hillside landscape, this 47 sqm villa offers a spacious bedroom, living area, and private pool overlooking rolling hills — a quiet sanctuary.</p>
+
+                <a class="p-villa-slide__link" href="#">View Room Facilities</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="p-facilities" id="facilities" aria-labelledby="facilities-heading">
+      <div class="c-section-header p-facilities__header">
+        <p class="c-section-header__eyebrow">Facilities</p>
+        <h2 id="facilities-heading" class="c-section-header__title">World-Class Conveniences</h2>
+        <p class="c-section-header__lede">Every detail designed to elevate your hilltop stay.</p>
+      </div>
+
+      <div class="p-highlights-row">
+        <article class="c-highlight-block">
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-infinity-pool.png" alt="Infinity pool overlooking the ocean at sunset" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
+          <div class="c-highlight-block__text">
+            <h3 class="c-highlight-block__title">Infinity Pool</h3>
+            <p class="c-highlight-block__description">A architectural marvel hovering over Penida&rsquo;s sunset crest.</p>
+          </div>
+        </article>
+
+        <article class="c-highlight-block">
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-punna-restaurant.png" alt="Dining room at Puṇṇa Restaurant" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
+          <div class="c-highlight-block__text">
+            <h3 class="c-highlight-block__title">Puṇṇa Restaurant</h3>
+            <p class="c-highlight-block__description">Serving exquisite modern Balinese cuisine with local ingredients.</p>
+          </div>
+        </article>
+
+        <article class="c-highlight-block">
+          <div class="c-highlight-block__media">
+            <img class="c-highlight-block__thumbnail" src="assets/images/highlight-radha-spa.png" alt="Treatment room at Radha Spa" width="513" height="560" loading="lazy" data-parallax="0.1" />
+          </div>
+          <div class="c-highlight-block__text">
+            <h3 class="c-highlight-block__title">Radha Spa</h3>
+            <p class="c-highlight-block__description">Tranquil treatment rooms integrating local healing rituals.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="p-other-highlights">
+        <div class="p-other-highlights__header">
+          <h3 class="p-other-highlights__label">Other Highlights</h3>
+          <span class="p-other-highlights__rule" aria-hidden="true"></span>
+        </div>
+        <ul class="c-facility-grid">
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-droplet"></use></svg>
+            <span class="c-facility-pill__label">Infinity Pool</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-utensils"></use></svg>
+            <span class="c-facility-pill__label">Restaurant (Puṇṇa)</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-flower"></use></svg>
+            <span class="c-facility-pill__label">Radha Spa</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
+            <span class="c-facility-pill__label">Yoga Pavilion</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-bell"></use></svg>
+            <span class="c-facility-pill__label">Wedding Chapel</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-glass-water"></use></svg>
+            <span class="c-facility-pill__label">Pool Bar</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
+            <span class="c-facility-pill__label">Room Service</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-activity"></use></svg>
+            <span class="c-facility-pill__label">Gym</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-wifi"></use></svg>
+            <span class="c-facility-pill__label">Free WiFi</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-users"></use></svg>
+            <span class="c-facility-pill__label">Function Room</span>
+          </li>
+          <li class="c-facility-pill c-facility-pill--chip">
+            <svg class="c-facility-pill__icon" aria-hidden="true"><use href="#icon-car"></use></svg>
+            <span class="c-facility-pill__label">Airport Transfer</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section class="p-location" id="location" aria-labelledby="location-heading">
+      <div class="p-location__content">
+        <div class="c-section-header p-location__intro">
+          <p class="c-section-header__eyebrow">Location</p>
+          <h2 id="location-heading" class="c-section-header__title">Getting Here</h2>
+          <p class="c-section-header__lede">Strategically located near Nusa Penida&rsquo;s most celebrated viewpoints, with private transfers arranged from the harbor on request.</p>
+        </div>
+
+        <div class="p-location__landmarks">
+          <h3 class="p-location__landmarks-label">Island Landmarks</h3>
+          <ul class="c-landmark-list">
+            <li class="c-landmark-item">
+              <span class="c-landmark-item__name">Nusa Penida Harbor</span>
+              <span class="c-landmark-item__duration">15 – 20 min</span>
+            </li>
+            <li class="c-landmark-item">
+              <span class="c-landmark-item__name">Kelingking Beach</span>
+              <span class="c-landmark-item__duration">45 – 60 min</span>
+            </li>
+            <li class="c-landmark-item">
+              <span class="c-landmark-item__name">Broken Beach / Angel's Billabong</span>
+              <span class="c-landmark-item__duration">45 – 60 min</span>
+            </li>
+            <li class="c-landmark-item">
+              <span class="c-landmark-item__name">Diamond Beach</span>
+              <span class="c-landmark-item__duration">60 – 75 min</span>
+            </li>
+            <li class="c-landmark-item">
+              <span class="c-landmark-item__name">Ngurah Rai Airport (Mainland + Boat)</span>
+              <span class="c-landmark-item__duration">approx. 3 hours</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="p-location__map">
+        <!-- Figma renders a static Maps mockup; production embeds the live
+             iframe at the same aspect ratio (see .c-map). -->
+        <iframe
+          class="c-map"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.6179765695642!2d115.26345637512888!3d-8.536417491506574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23d96d5dfb91b%3A0x13b46ec39e228794!2sThe%20Sankara%20Resort!5e0!3m2!1sid!2sid!4v1788331698450!5m2!1sid!2sid"
+          title="Map showing The Sankara Hill on Nusa Penida"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+    <section class="p-reservations" id="reservations" aria-labelledby="reservations-heading">
+      <form class="p-reservations__form" action="#" method="post" novalidate>
+        <div class="c-section-header p-reservations__header">
+          <p class="c-section-header__eyebrow">Reservations</p>
+          <h2 id="reservations-heading" class="c-section-header__title">Reserve Your Stay</h2>
+          <p class="c-section-header__lede">Send us an enquiry, and our reservation ambassador will respond within 24 hours.</p>
+        </div>
+
+        <div class="p-reservations__fields">
+          <div class="c-field">
+            <label class="c-field__label" for="field-fullname">Full Name *</label>
+            <input class="c-field__control" id="field-fullname" name="fullname" type="text" placeholder="e.g. Alexander Mercer" autocomplete="name" required aria-required="true" aria-describedby="error-fullname" />
+            <span class="c-field__error" id="error-fullname">Please enter your full name.</span>
+          </div>
+
+          <div class="c-field-row">
+            <div class="c-field">
+              <label class="c-field__label" for="field-phone">Phone / WhatsApp *</label>
+              <input class="c-field__control" id="field-phone" name="phone" type="tel" placeholder="+62 812-3456-7890" autocomplete="tel" required aria-required="true" aria-describedby="error-phone" />
+              <span class="c-field__error" id="error-phone">Please enter a valid phone or WhatsApp number.</span>
+            </div>
+            <div class="c-field">
+              <label class="c-field__label" for="field-email">Email Address *</label>
+              <input class="c-field__control" id="field-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required aria-required="true" aria-describedby="error-email" />
+              <span class="c-field__error" id="error-email">Please enter a valid email address.</span>
+            </div>
+          </div>
+
+          <div class="c-field-row">
+            <div class="c-field">
+              <label class="c-field__label" for="field-checkin">Check-In Date *</label>
+              <input class="c-field__control c-field__control--date" id="field-checkin" name="checkin" type="date" min="2026-09-04" required aria-required="true" aria-describedby="error-checkin" />
+              <span class="c-field__error" id="error-checkin">Please select a check-in date.</span>
+            </div>
+            <div class="c-field">
+              <label class="c-field__label" for="field-checkout">Check-Out Date *</label>
+              <input class="c-field__control c-field__control--date" id="field-checkout" name="checkout" type="date" min="2026-09-05" required aria-required="true" aria-describedby="error-checkout" />
+              <span class="c-field__error" id="error-checkout">Please select a check-out date.</span>
+            </div>
+            <div class="c-field p-reservations__guests">
+              <label class="c-field__label" for="field-guests">Guests</label>
+              <select class="c-field__control c-field__control--select" id="field-guests" name="guests">
+                <option value="1">1 Guest</option>
+                <option value="2" selected>2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+                <option value="5+">5+ Guests</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-reservations__actions">
+          <button class="c-btn c-btn--form" type="submit">Send Booking Enquiry</button>
+          <p class="p-reservations__note">* Required fields. Your secure request goes straight to our reservations desk.</p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="c-footer" id="contact">
+    <div class="c-footer__content">
+      <div class="c-footer__brand">
+        <div class="c-footer__identity">
+          <p class="c-footer__brand-name">The Sankara Hill</p>
+          <p class="c-footer__tagline">Nusa Penida &middot; Bali</p>
+        </div>
+        <p class="c-footer__contact">A 5-star hilltop ocean-view luxury escape offering pristine island solitude in Bali&rsquo;s most dramatic natural environment.</p>
+
+        <!-- assumption: social destinations not specified in Figma. -->
+        <ul class="c-footer__social">
+          <li>
+            <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on Instagram">
+              <img class="c-footer__social-icon" src="assets/images/footer/bxl-instagram-alt.svg" alt="" width="24" height="24" loading="lazy" />
+            </a>
+          </li>
+          <li>
+            <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on Facebook">
+              <img class="c-footer__social-icon" src="assets/images/footer/bxl-facebook.svg" alt="" width="24" height="24" loading="lazy" />
+            </a>
+          </li>
+          <li>
+            <a class="c-footer__social-link" href="#" aria-label="The Sankara Hill on TikTok">
+              <img class="c-footer__social-icon" src="assets/images/footer/bxl-tiktok.svg" alt="" width="24" height="24" loading="lazy" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <address class="c-footer__contacts">
+        <h2 class="c-footer__heading">RESORT CONTACTS</h2>
+        <div class="c-footer__contact-list">
+          <a class="c-footer__contact-link" href="https://maps.google.com/?q=Kutampi+Atas,+Nusa+Penida,+Bali,+Indonesia" target="_blank" rel="noopener"><span class="u-visually-hidden">Address: </span>Kutampi Atas, Nusa Penida, Bali, Indonesia</a>
+          <a class="c-footer__contact-link" href="tel:+62361123456"><span class="u-visually-hidden">Phone: </span>+62 361 123 456</a>
+          <a class="c-footer__contact-link" href="mailto:reservation@sankarahillpenida.com"><span class="u-visually-hidden">Email: </span>reservation@sankarahillpenida.com</a>
+        </div>
+      </address>
+
+      <nav class="c-footer__explore" aria-label="Explore">
+        <h2 class="c-footer__heading">EXPLORE</h2>
+        <div class="c-footer__links">
+          <a class="c-footer__link" href="#about">About Resort</a>
+          <a class="c-footer__link" href="#accommodations">Accommodations</a>
+          <a class="c-footer__link" href="#facilities">Pu&#7751;&#7751;a Restaurant</a>
+          <a class="c-footer__link" href="#facilities">Radha Wellness Spa</a>
+          <a class="c-footer__link" href="#facilities">Event Venues</a>
+        </div>
+      </nav>
+    </div>
+
+    <div class="c-footer__bottom">
+      <p class="c-footer__legal">&copy; 2026 The Sankara Hill Penida. All rights reserved.</p>
+
+      <!-- assumption: policy pages not yet built; placeholder hrefs. -->
+      <nav class="c-footer__legal-links" aria-label="Legal">
+        <a class="c-footer__link" href="#">Privacy Policy</a>
+        <a class="c-footer__link" href="#">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+  <svg class="u-visually-hidden" aria-hidden="true">
+    <defs>
+    <symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332.606-6.064 5.828 1.48 8.279L12 18.897l-7.416 4.971 1.48-8.279L0 8.761l8.332-.606L12 .587z"/></symbol>
+    <!-- lucide: bed (https://lucide.dev/icons/bed) -->
+    <symbol id="icon-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 4v16" />
+      <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+      <path d="M2 17h20" />
+      <path d="M6 8v9" />
+    </symbol>
+    <!-- lucide: maximize-2 (https://lucide.dev/icons/maximize-2) -->
+    <symbol id="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6" />
+      <path d="m21 3-7 7" />
+      <path d="m3 21 7-7" />
+      <path d="M9 21H3v-6" />
+    </symbol>
+    <symbol id="icon-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />
+    </symbol>
+    <symbol id="icon-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+    <path d="M7 2v20" />
+    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+    </symbol>
+    <symbol id="icon-flower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3" />
+    <path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5" />
+    <path d="M12 7.5V9" />
+    <path d="M7.5 12H9" />
+    <path d="M16.5 12H15" />
+    <path d="M12 16.5V15" />
+    <path d="m8 8 1.88 1.88" />
+    <path d="M14.12 9.88 16 8" />
+    <path d="m8 16 1.88-1.88" />
+    <path d="M14.12 14.12 16 16" />
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" />
+    <path d="M12 20v2" />
+    <path d="m4.93 4.93 1.41 1.41" />
+    <path d="m17.66 17.66 1.41 1.41" />
+    <path d="M2 12h2" />
+    <path d="M20 12h2" />
+    <path d="m6.34 17.66-1.41 1.41" />
+    <path d="m19.07 4.93-1.41 1.41" />
+    </symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+    <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+    </symbol>
+    <symbol id="icon-glass-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5.116 4.104A1 1 0 0 1 6.11 3h11.78a1 1 0 0 1 .994 1.105L17.19 20.21A2 2 0 0 1 15.2 22H8.8a2 2 0 0 1-2-1.79z" />
+    <path d="M6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0" />
+    </symbol>
+    <symbol id="icon-circle-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+    <path d="m15 9-6 6" />
+    <path d="m9 9 6 6" />
+    </symbol>
+    <symbol id="icon-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+    </symbol>
+    <symbol id="icon-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 20h.01" />
+    <path d="M2 8.82a15 15 0 0 1 20 0" />
+    <path d="M5 12.859a10 10 0 0 1 14 0" />
+    <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+    </symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <circle cx="9" cy="7" r="4" />
+    </symbol>
+    <symbol id="icon-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+    <circle cx="7" cy="17" r="2" />
+    <path d="M9 17h6" />
+    <circle cx="17" cy="17" r="2" />
+    </symbol>
+    </defs>
+  </svg>
+
+  <script src="assets/js/loader.js?v=4"></script>
+  <script src="assets/vendor/lenis.min.js"></script>
+  <script src="assets/js/smooth-scroll.js?v=3"></script>
+  <script src="assets/js/main.js?v=3"></script>
+  <script src="assets/js/home.js?v=9"></script>
+</body>
+</html>

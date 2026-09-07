@@ -1,0 +1,197 @@
+/* ==========================================================================
+   Sankara Hill — Editorial 3:4 Bottom-to-Top Clip-Path Reveal Loader
+   Sequential image unmasking & seamless continuous hero scale expansion
+   ========================================================================== */
+
+.c-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-teal-950, #081a1c);
+  pointer-events: auto;
+}
+
+.c-loader__scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-teal-950, #081a1c);
+  opacity: 1;
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+  z-index: 1;
+}
+
+.c-loader__stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Pristine 3:4 portrait viewport frame — pure minimalist image, no shadows or strokes */
+.c-loader__frame {
+  position: relative;
+  width: clamp(220px, 20vw, 320px);
+  aspect-ratio: 3 / 4;
+  max-width: 84vw;
+  max-height: 75vh;
+  overflow: hidden;
+  background-color: transparent;
+  box-shadow: none;
+  border: 0;
+  outline: 0;
+}
+
+/* Each slide layer stacked inside the 3:4 frame */
+.c-loader__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Start hidden: clipped 100% from top down to bottom line */
+  clip-path: inset(100% 0 0 0);
+  will-change: clip-path, transform;
+}
+
+/* Image inside slide */
+.c-loader__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform: scale(1.05);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Revealing state: bottom-to-top unmasking with smooth luxury ease-out */
+.c-loader__slide.is-revealed {
+  clip-path: inset(0% 0 0 0);
+  transition: clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.c-loader__slide.is-revealed .c-loader__img {
+  transform: scale(1);
+}
+
+/* Individual z-index ordering for sequential overlays */
+.c-loader__slide--1 { z-index: 1; }
+.c-loader__slide--2 { z-index: 2; }
+.c-loader__slide--3 { z-index: 3; }
+.c-loader__slide--4 { z-index: 4; }
+.c-loader__slide--final { z-index: 5; }
+
+/* Morphing / Expanding state */
+.c-loader.is-morphing .c-loader__scrim {
+  opacity: 0;
+}
+
+/* Subtle dark gradient overlay for final hero slide to match .p-hero__overlay */
+.c-loader__slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+/* Final image expands smoothly into full hero size — GPU Uniform Aperture Reveal */
+.c-loader__slide--final.is-expanding {
+  z-index: 9999;
+  box-shadow: none;
+  clip-path: inset(0px 0px 0px 0px) !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, clip-path;
+}
+
+.c-loader__slide--final.is-expanding .c-loader__slide-overlay {
+  opacity: 1;
+}
+
+/* Website content reveal coordinated with hero expansion */
+body.is-loading .c-navbar {
+  opacity: 0;
+  transform: translateY(-16px);
+  pointer-events: none;
+}
+
+body.is-loading .p-hero__title {
+  opacity: 0;
+  transform: translateY(36px);
+}
+
+body.is-loading .p-hero__body {
+  opacity: 0;
+  transform: translateY(36px);
+}
+
+body.is-loader-revealing .c-navbar {
+  z-index: 10005;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 850ms var(--ease-out) 0.85s,
+              transform 850ms var(--ease-out) 0.85s;
+}
+
+body.is-loader-revealing .p-hero__content {
+  z-index: 10004;
+}
+
+body.is-loader-revealing .p-hero__title {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1050ms var(--ease-out) 1.05s,
+              transform 1050ms var(--ease-out) 1.05s;
+}
+
+body.is-loader-revealing .p-hero__body {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1050ms var(--ease-out) 1.25s,
+              transform 1050ms var(--ease-out) 1.25s;
+}
+
+/* Hidden state once complete */
+.c-loader.is-done {
+  display: none !important;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .c-loader {
+    transition: opacity 0.3s ease !important;
+  }
+  .c-loader__slide {
+    clip-path: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+  .c-loader__slide--final.is-expanding {
+    transition: none !important;
+  }
+  body.is-loading .c-navbar,
+  body.is-loading .p-hero__title,
+  body.is-loading .p-hero__body {
+    transform: none !important;
+  }
+  body.is-loader-revealing .c-navbar,
+  body.is-loader-revealing .p-hero__title,
+  body.is-loader-revealing .p-hero__body {
+    transform: none !important;
+    transition: opacity 300ms ease !important;
+  }
+}
