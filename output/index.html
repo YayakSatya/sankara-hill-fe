@@ -6,6 +6,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+    window.addEventListener('beforeunload', function () {
+      window.scrollTo(0, 0);
+    });
+  </script>
   <title>The Sankara Hill — Nusa Penida, Bali</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -94,7 +106,6 @@
         width="1920"
         height="1080"
         fetchpriority="high"
-        data-parallax="0.08"
       />
     </div>
     <div class="p-hero__overlay" aria-hidden="true"></div>

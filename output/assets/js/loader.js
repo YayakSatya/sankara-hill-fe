@@ -21,7 +21,10 @@
   // Check reduced motion
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Lock scroll during animation
+  // Lock scroll restoration and force top scroll during animation
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   document.body.classList.add('is-loading');
   document.body.style.overflow = 'hidden';
   window.scrollTo(0, 0);
@@ -50,7 +53,11 @@
     if (loader.parentNode) {
       loader.parentNode.removeChild(loader);
     }
+    window.scrollTo(0, 0);
     if (window.lenis && typeof window.lenis.start === 'function') {
+      if (typeof window.lenis.scrollTo === 'function') {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
       window.lenis.start();
     }
     window.dispatchEvent(new Event('resize'));
@@ -98,6 +105,12 @@
     if (!hero || !finalSlide) {
       finishLoader();
       return;
+    }
+
+    // Guarantee scroll is strictly 0,0 before computing bounds
+    window.scrollTo(0, 0);
+    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+      window.lenis.scrollTo(0, { immediate: true });
     }
 
     var slideRect = finalSlide.getBoundingClientRect();
